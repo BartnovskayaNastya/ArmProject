@@ -475,7 +475,7 @@
                                 <RowDefinition Height="30"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Button HorizontalAlignment="Left" Content="Посчитать очки" Click="getResultsProtocol_Click"></Button>
+                            <Button HorizontalAlignment="Center" Content="Посчитать очки" Click="getResultsProtocol_Click"></Button>
                             <TabControl Grid.Row="1">
                                 <TabItem Header="Мужчины">
                                     <local1:SummaryProtocolTableTemplate x:Name="resultProtocolB" DataContext="{Binding}"></local1:SummaryProtocolTableTemplate>

@@ -399,10 +399,8 @@ namespace ArmBazaProject
         {
             resultVM.GetProtocolTeamResults();
 
-            resultProtocolB.DataContext = resultVM.ResultCategoryBoys;
-            resultProtocolG.DataContext = resultVM.ResultCategoryGirls;
-
-            
+            resultProtocolB.DataContext = resultVM.ResultTeamCategoryBoys;
+            resultProtocolG.DataContext = resultVM.ResultTeamCategoryGirls;
         }
 
         private void saveAllMembers_Click(object sender, RoutedEventArgs e)
