@@ -469,7 +469,7 @@
                         </Grid>
 
                     </TabItem>
-                    <TabItem Header="СК">
+                    <TabItem Header="СК+Область">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="30"/>
@@ -487,19 +487,32 @@
                         </Grid>
                         
                     </TabItem>
-                    <TabItem Header="Сводный протокол">
+                    <TabItem Header="СП Команда">
                         <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <Button HorizontalAlignment="Left" Content="Посчитать очки" Click="getTotalProtocol_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
+                            <Button HorizontalAlignment="Center" Content="Посчитать очки" Click="getTotalProtocol_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
 
-                            <local1:SummaryProtocolSK Grid.Row="1" x:Name="totalProtocol" DataContext="{Binding}"></local1:SummaryProtocolSK>
+                            <local1:SummaryProtocolSK Grid.Row="1" x:Name="totalProtocolTeam" DataContext="{Binding}"></local1:SummaryProtocolSK>
                            
                             
     </Grid>
     </TabItem>
+                    <TabItem Header="СП Область">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Button HorizontalAlignment="Center" Content="Посчитать очки" Click="getTotalProtocol_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
+
+                            <local1:SummaryProtocolSK Grid.Row="1" x:Name="totalProtocolRegion" DataContext="{Binding}"></local1:SummaryProtocolSK>
+
+
+                        </Grid>
+                    </TabItem>
                 </TabControl>
             </TabItem>
         </TabControl>

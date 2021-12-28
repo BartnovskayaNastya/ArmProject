@@ -201,8 +201,8 @@ namespace ArmBazaProject.ViewModels
             GetTotalResultByHand(resultCategoryGirls);
 
             //сбор команд
-            GetCategotyTeams(resultCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
-            GetCategotyTeams(resultCategoryBoys, competition.CompetitionLeftHand.CategoriesB, competition.CompetitionRightHand.CategoriesB);
+           // GetCategotyTeams(resultCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
+            //GetCategotyTeams(resultCategoryBoys, competition.CompetitionLeftHand.CategoriesB, competition.CompetitionRightHand.CategoriesB);
 
         }
 
@@ -364,50 +364,7 @@ namespace ArmBazaProject.ViewModels
 
         }
 
-        private void GetCategotyTeams(CategoryViewModel[] categories, CategoryViewModel[] categoriesL, CategoryViewModel[] categoriesR)
-        {
-            TeamModel team;
-            for (int i = 0; i < categoriesL.Length; i++)
-            {
-                for (int j = 0; j < categoriesL[i].Teams.Count; j++)
-                {
-                    team = new TeamModel(categoriesL[i].Teams[j].Name);
-                    if (team.Name != "Лично")
-                    {
-                        categories[i].Teams.Add(team);
-                    }
-
-
-                }
-            }
-
-            for (int i = 0; i < categoriesR.Length; i++)
-            {
-                for (int j = 0; j < categoriesR[i].Teams.Count; j++)
-                {
-                    for (int k = 0; k < categories.Length; k++)
-                    {
-                        if (k == i)
-                        {
-                            for (int m = 0; m < categories[k].Teams.Count; m++)
-                            {
-                                if (!categories[k].CheckTeam(categoriesR[i].Teams[j]))
-                                {
-                                    team = new TeamModel(categoriesR[i].Teams[j].Name);
-                                    if (team.Name != "Лично")
-                                    {
-                                        categories[k].Teams.Add(team);
-                                    }
-                                }
-                            }
-                        }
-
-                    }
-                }
-            }
-
-        }
-
+       
 
         //сортировка по весу
         private void SortByWeight(CategoryViewModel category)
@@ -483,7 +440,7 @@ namespace ArmBazaProject.ViewModels
 
         }
 
-        #region Team Protocol
+        #region Team + Region Protocol
 
         private void PrepareData()
         {
@@ -517,10 +474,19 @@ namespace ArmBazaProject.ViewModels
                     {
                         categoriesLeft[t].PlaceMembers[l].LeftHandPlaceProtocol = categoriesLeft[t].PlaceMembers[l].Place;
                     }
+                    if (!categoriesLeft[t].PlaceMembers[l].IsRegion)
+                    {
+                        categoriesLeft[t].PlaceMembers[l].LeftHandPlaceRegionProtocol = 100;
+                    }
+                    else
+                    {
+                        categoriesLeft[t].PlaceMembers[l].LeftHandPlaceRegionProtocol = categoriesLeft[t].PlaceMembers[l].Place;
+                    }
                     categoriesLeft[t].PlaceMembers[l].LeftHandPlace = categoriesLeft[t].PlaceMembers[l].Place;
                 }
             }
-            //сортировка по возрастанию!!!
+
+            //сортировка по возрастанию!!! для команды
 
             for (int t = 0; t < categoriesLeft.Length; t++)
             {
@@ -550,6 +516,38 @@ namespace ArmBazaProject.ViewModels
             }
 
 
+            //сортировка для региона
+
+            for (int t = 0; t < categoriesLeft.Length; t++)
+            {
+                for (int i = 0; i < categoriesLeft[t].PlaceMembers.Count - 1; i++)
+                {
+                    for (int j = i + 1; j < categoriesLeft[t].PlaceMembers.Count; j++)
+                    {
+                        if (categoriesLeft[t].PlaceMembers[i].LeftHandPlaceRegionProtocol > categoriesLeft[t].PlaceMembers[j].LeftHandPlaceRegionProtocol)
+                        {
+                            temp = categoriesLeft[t].PlaceMembers[i];
+                            categoriesLeft[t].PlaceMembers[i] = categoriesLeft[t].PlaceMembers[j];
+                            categoriesLeft[t].PlaceMembers[j] = temp;
+                        }
+                    }
+                }
+
+            }
+            int placeRegion = 0;
+            for (int t = 0; t < categoriesLeft.Length; t++)
+            {
+                for (int i = 0; i < categoriesLeft[t].PlaceMembers.Count; i++)
+                {
+                    placeRegion = i;
+                    placeRegion += 1;
+                    categoriesLeft[t].PlaceMembers[i].LeftHandPlaceRegionProtocol = placeRegion;
+                }
+            }
+
+
+            //правая рука
+
             for (int t = 0; t < categoriesRight.Length; t++)
             {
                 for (int l = 0; l < categoriesRight[t].PlaceMembers.Count; l++)
@@ -561,6 +559,14 @@ namespace ArmBazaProject.ViewModels
                     else
                     {
                         categoriesRight[t].PlaceMembers[l].RightHandPlaceProtocol = categoriesRight[t].PlaceMembers[l].Place;
+                    }
+                    if (!categoriesRight[t].PlaceMembers[l].IsRegion)
+                    {
+                        categoriesRight[t].PlaceMembers[l].RightHandPlaceRegionProtocol = 100;
+                    }
+                    else
+                    {
+                        categoriesRight[t].PlaceMembers[l].RightHandPlaceRegionProtocol = categoriesRight[t].PlaceMembers[l].Place;
                     }
                     categoriesRight[t].PlaceMembers[l].RightHandPlace = categoriesRight[t].PlaceMembers[l].Place;
                 }
@@ -593,6 +599,37 @@ namespace ArmBazaProject.ViewModels
                 }
             }
 
+
+            //сортировка для региона
+
+            for (int t = 0; t < categoriesRight.Length; t++)
+            {
+                for (int i = 0; i < categoriesRight[t].PlaceMembers.Count - 1; i++)
+                {
+                    for (int j = i + 1; j < categoriesRight[t].PlaceMembers.Count; j++)
+                    {
+                        if (categoriesRight[t].PlaceMembers[i].RightHandPlaceRegionProtocol > categoriesRight[t].PlaceMembers[j].RightHandPlaceRegionProtocol)
+                        {
+                            temp = categoriesRight[t].PlaceMembers[i];
+                            categoriesRight[t].PlaceMembers[i] = categoriesRight[t].PlaceMembers[j];
+                            categoriesRight[t].PlaceMembers[j] = temp;
+                        }
+                    }
+                }
+
+            }
+            
+            placeRegion = 0;
+            for (int t = 0; t < categoriesRight.Length; t++)
+            {
+                for (int i = 0; i < categoriesRight[t].PlaceMembers.Count; i++)
+                {
+                    placeRegion = i;
+                    placeRegion += 1;
+                    categoriesRight[t].PlaceMembers[i].RightHandPlaceRegionProtocol = placeRegion;
+                }
+            }
+
         }
 
         private void SetPoints(CategoryViewModel[] categoriesLeft, CategoryViewModel[] categoriesRight)
@@ -610,6 +647,10 @@ namespace ArmBazaProject.ViewModels
                         {
                             categoriesLeft[t].PlaceMembers[l].LeftHandScore = protocolPoints[z];
                         }
+                        if(categoriesLeft[t].PlaceMembers[l].LeftHandPlaceRegionProtocol == place)
+                        {
+                            categoriesLeft[t].PlaceMembers[l].LeftHandScoreRegion = protocolPoints[z];
+                        }
                     }
 
                 }
@@ -626,6 +667,10 @@ namespace ArmBazaProject.ViewModels
                         if (categoriesRight[t].PlaceMembers[l].RightHandPlaceProtocol == place)
                         {
                             categoriesRight[t].PlaceMembers[l].RightHandScore = protocolPoints[z];
+                        }
+                        if (categoriesRight[t].PlaceMembers[l].RightHandPlaceRegionProtocol == place)
+                        {
+                            categoriesRight[t].PlaceMembers[l].RightHandScoreRegion = protocolPoints[z];
                         }
                     }
 
@@ -649,13 +694,14 @@ namespace ArmBazaProject.ViewModels
                     {
                         member.LeftHandScoreVM = member.LeftHandScore.ToString();
                         member.LeftHandPlaceVM = member.LeftHandPlace.ToString();
+                        member.LeftHandScoreRegionVM = member.LeftHandScoreRegion.ToString();
                         for (int k = 0; k < categoriesRight[i].PlaceMembers.Count; k++)
                         {
                             if (CheckMember(categoriesLeft[i].PlaceMembers[j], categoriesRight[i].PlaceMembers[k]))
                             {
                                 member.RightHandScoreVM = categoriesRight[i].PlaceMembers[k].RightHandScore.ToString();
                                 member.RightHandPlaceVM = categoriesRight[i].PlaceMembers[k].RightHandPlace.ToString();
-                                member.RightHandPlaceProtocol = categoriesRight[i].PlaceMembers[k].RightHandPlaceProtocol;
+                                member.RightHandScoreRegionVM = categoriesRight[i].PlaceMembers[k].RightHandScoreRegion.ToString();
                             }
                         }
 
@@ -664,11 +710,12 @@ namespace ArmBazaProject.ViewModels
                     {
                         member.LeftHandScoreVM = member.LeftHandScore.ToString();
                         member.LeftHandPlaceVM = member.LeftHandPlace.ToString();
+                        member.LeftHandScoreRegionVM = member.LeftHandScoreRegion.ToString();
                         member.RightHandScoreVM = "";
                         member.RightHandPlaceVM = "";
+                        member.RightHandScoreRegionVM = "chack";
                     }
                     resultCategory[i].ResultMembers.Add(member);
-
                 }
             }
 
@@ -681,6 +728,8 @@ namespace ArmBazaProject.ViewModels
                         member = (MemberViewModel)categoriesRight[i].PlaceMembers[j].Clone();
                         member.RightHandScoreVM = member.RightHandScore.ToString();
                         member.RightHandPlaceVM = member.RightHandPlace.ToString();
+                        member.RightHandScoreRegionVM= member.RightHandScoreRegion.ToString();
+                        member.LeftHandScoreRegionVM = "";
                         member.LeftHandScoreVM = "";
                         member.LeftHandPlaceVM = "";
                         resultCategory[i].ResultMembers.Add(member);
@@ -696,19 +745,35 @@ namespace ArmBazaProject.ViewModels
             {
                 for (int j = 0; j < categories[i].ResultMembers.Count; j++)
                 {
-                    if (!categories[i].ResultMembers[j].IsSportTeam)
+                    if (categories[i].ResultMembers[j].isLeftHand)
                     {
-                        categories[i].ResultMembers[j].LeftHandScoreVM = "Л";
+                        if (!categories[i].ResultMembers[j].IsSportTeam)
+                        {
+                            categories[i].ResultMembers[j].LeftHandScoreVM = "Л";
+                        }
+                        if (!categories[i].ResultMembers[j].IsRegion)
+                        {
+                            categories[i].ResultMembers[j].LeftHandScoreRegionVM = "Л";
+                        }
+                            
                     }
-                    else if (!categories[i].ResultMembers[j].isLeftHand)
+                    else
                     {
                         categories[i].ResultMembers[j].LeftHandScoreVM = "-";
                     }
-                    if (!categories[i].ResultMembers[j].IsSportTeam)
+                    if (categories[i].ResultMembers[j].isRightHand)
                     {
-                        categories[i].ResultMembers[j].RightHandScoreVM = "Л";
+                        if (!categories[i].ResultMembers[j].IsSportTeam)
+                        {
+                            categories[i].ResultMembers[j].RightHandScoreVM = "Л";
+                        }
+                        if (!categories[i].ResultMembers[j].IsRegion)
+                        {
+                            categories[i].ResultMembers[j].RightHandScoreRegionVM = "Л";
+                        }
+
                     }
-                    else if (!categories[i].ResultMembers[j].isRightHand)
+                    else
                     {
                         categories[i].ResultMembers[j].RightHandScoreVM = "-";
                     }
@@ -721,28 +786,68 @@ namespace ArmBazaProject.ViewModels
         #endregion
 
 
-        /// <summary>
-        /// ДОДЕЛАТЬ РЕЗУЛЬТАТЫ КОМАНДЫ ПО ВСЕМ КАТЕГОРИЯМ!!!!!!!!!
-        /// </summary>
         public void GetTotalTeamResults()
         {
-            /*GetCategotyTeams(ResultTeamCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
+
+            GetCategotyTeams(ResultTeamCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
             GetCategotyTeams(ResultTeamCategoryBoys, competition.CompetitionLeftHand.CategoriesB, competition.CompetitionRightHand.CategoriesB);
 
 
             GetSummaryProtocolPoints(ResultTeamCategoryGirls, summaryTeamsG);
             GetSummaryProtocolPoints(ResultTeamCategoryGirls, summaryTeamsB);
 
-            //SetProtocolVMData(summaryTeamsG);
-            //SetProtocolVMData(summaryTeamsB);
 
             resultSummaryTeams =  CollectDataTeams(summaryTeamsB, summaryTeamsG);
 
 
-            SetPlaceSummaryTeams(resultSummaryTeams);*/
+            SetPlaceSummaryTeams(resultSummaryTeams);
         }
 
         #region ResultTeamProtocol
+
+        private void GetCategotyTeams(CategoryViewModel[] categories, CategoryViewModel[] categoriesL, CategoryViewModel[] categoriesR)
+        {
+            TeamModel team;
+            for (int i = 0; i < categoriesL.Length; i++)
+            {
+                for (int j = 0; j < categoriesL[i].ResultMembers.Count; j++)
+                {
+                    team = new TeamModel(categoriesL[i].ResultMembers[j].TeamName);
+                    if (categories[i].Teams.Count == 0)
+                    {
+                        categories[i].Teams.Add(team);
+                    }
+                    else if (team.Name != "Лично")
+                    {
+                        if (!categories[i].CheckTeam(team))
+                        {
+                            categories[i].Teams.Add(team);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < categoriesR.Length; i++)
+            {
+                for (int j = 0; j < categoriesR[i].ResultMembers.Count; j++)
+                {
+                    team = new TeamModel(categoriesR[i].ResultMembers[j].TeamName);
+                    if (categories[i].Teams.Count == 0)
+                    {
+                        categories[i].Teams.Add(team);
+                    }
+                    else if (team.Name != "Лично")
+                    {
+                        if (!categories[i].CheckTeam(team))
+                        {
+                            categories[i].Teams.Add(team);
+                        }
+                    }
+                }
+            }
+
+        }
+
         //получение мест для команд
         private void GetResultTeam(CategoryViewModel[] categories)
         {
@@ -919,54 +1024,6 @@ namespace ArmBazaProject.ViewModels
 
         }
 
-        private void SetProtocolVMData(ObservableCollection<ProtocolTeam> summaryTeams)
-        {
-            string result;
-            for (int k = 0; k < summaryTeams.Count; k++)
-            {
-                for (int i = 0; i < summaryTeams[k].PointsLeftHand.Count; i++)
-                {
-                    if (summaryTeams[k].PointsLeftHand[i].points.Count >= 2)
-                    {
-                        result = summaryTeams[k].PointsLeftHand[i].points[0].ToString() + "," +
-                       summaryTeams[k].PointsLeftHand[i].points[1].ToString();
-                    }
-                    else if (summaryTeams[k].PointsLeftHand[i].points.Count == 1)
-                    {
-                        result = summaryTeams[k].PointsLeftHand[i].points[0].ToString();
-                    }
-                    else
-                    {
-                        result = "";
-                    }
-                    //result = summaryTeams[k].PointsLeftHand[i].points[0].ToString() + "," +
-                    //    summaryTeams[k].PointsLeftHand[i].points[1].ToString();
-
-                    summaryTeams[k].PointsLeftHandVM.Add(result);
-                }
-
-                for (int i = 0; i < summaryTeams[k].PointsRightHand.Count; i++)
-                {
-                    if (summaryTeams[k].PointsRightHand[i].points.Count >= 2)
-                    {
-                        result = summaryTeams[k].PointsRightHand[i].points[0].ToString() + "," +
-                        summaryTeams[k].PointsRightHand[i].points[1].ToString();
-                    }
-                    else if (summaryTeams[k].PointsRightHand[i].points.Count == 1)
-                    {
-                        result = summaryTeams[k].PointsRightHand[i].points[0].ToString();
-                    }
-                    else
-                    {
-                        result = "";
-                    }
-
-
-                    summaryTeams[k].PointsRightHandVM.Add(result);
-                }
-            }
-        }
-
         private void SortSummaryTeams(ObservableCollection<ProtocolTeam> summaryTeams)
         {
             ProtocolTeam temp;
@@ -997,7 +1054,6 @@ namespace ArmBazaProject.ViewModels
 
         private ObservableCollection<ProtocolTeam> CollectDataTeams(ObservableCollection<ProtocolTeam> summaryTeams1, ObservableCollection<ProtocolTeam> summaryTeams2)
         {
-            ObservableCollection<ProtocolTeam> summaryTeams;
             for (int i = 0; i < summaryTeams1.Count; i++)
             {
                 summaryTeams2[i].ScoreB = summaryTeams1[i].ScoreB;
@@ -1007,21 +1063,11 @@ namespace ArmBazaProject.ViewModels
             {
                 summaryTeams2[k].TotalScore = summaryTeams2[k].ScoreB + summaryTeams2[k].ScoreG;
             }
-            summaryTeams = summaryTeams2;
 
-            return summaryTeams;
+            return summaryTeams2;
         }
 
         #endregion
-
-
-
-        public void GetProtocolRegionResults()
-        {
-
-        }
-
-
 
     }
 }

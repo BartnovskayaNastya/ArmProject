@@ -416,8 +416,8 @@ namespace ArmBazaProject
 
         private void getTotalProtocol_Click(object sender, RoutedEventArgs e)
         {
-           resultVM.GetTotalTeamResults();
-           totalProtocol.DataContext = resultVM.ResultSummaryTeams;
+            resultVM.GetTotalTeamResults();
+            totalProtocolTeam.DataContext = resultVM.ResultSummaryTeams;
         }
     }
 }

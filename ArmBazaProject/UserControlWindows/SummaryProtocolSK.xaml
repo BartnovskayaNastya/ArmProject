@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid AutoGenerateColumns="False" Name="totalTeamsGrid" ItemsSource="{Binding}" >
+        <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding}" >
             <DataGrid.Columns>
                 <DataGridTextColumn  Header ="Команда" Binding="{Binding Name}" />
                 <DataGridTextColumn  Header ="Результат Мужчины" Binding="{Binding ScoreB}" />

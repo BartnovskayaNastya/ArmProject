@@ -32,6 +32,20 @@ namespace ArmBazaProject
         private string rightHandScoreVM;
         private string leftHandScoreVM;
 
+        private int rightHandPlaceRegionProtocol;
+        private int leftHandPlaceRegionProtocol;
+
+        private int leftHandScoreRegion;
+        private int rightHandScoreRegion;
+
+        private string leftHandScoreRegionVM;
+        private string rightHandScoreRegionVM;
+
+        private string leftHandPlaceRegionVM;
+        private string rightHandPlaceRegionVM;
+
+
+
         private int rightHandPlace;
         private int leftHandPlace;
         private int resultHandPlace;
@@ -88,7 +102,16 @@ namespace ArmBazaProject
                 LeftHandScoreVM = LeftHandScoreVM,
                 RightHandScoreVM = RightHandScoreVM,
                 RightHandPlaceProtocol = RightHandPlaceProtocol,
-                LeftHandPlaceProtocol = LeftHandPlaceProtocol
+                LeftHandPlaceProtocol = LeftHandPlaceProtocol,
+                RightHandPlaceRegionProtocol = RightHandPlaceRegionProtocol,
+                LeftHandPlaceRegionProtocol = LeftHandPlaceRegionProtocol,
+                RightHandScoreRegion = RightHandScoreRegion,
+                LeftHandScoreRegion = LeftHandScoreRegion,
+                LeftHandScoreRegionVM = LeftHandScoreRegionVM,
+                RightHandScoreRegionVM = RightHandScoreRegionVM,
+                LeftHandPlaceRegionVM = LeftHandPlaceRegionVM,
+                RightHandPlaceRegionVM = RightHandPlaceRegionVM
+
 
             };
         }
@@ -104,6 +127,66 @@ namespace ArmBazaProject
             }
         }
 
+        public string RightHandPlaceRegionVM
+        {
+            get { return rightHandPlaceRegionVM; }
+            set
+            {
+                rightHandPlaceRegionVM = value;
+                OnPropertyChanged("RightHandPlaceRegionVM");
+            }
+        }
+
+        public string LeftHandPlaceRegionVM
+        {
+            get { return leftHandPlaceRegionVM; }
+            set
+            {
+                leftHandPlaceRegionVM = value;
+                OnPropertyChanged("LeftHandPlaceRegionVM");
+            }
+        }
+
+        public string LeftHandScoreRegionVM
+        {
+            get { return leftHandScoreRegionVM; }
+            set
+            {
+                leftHandScoreRegionVM = value;
+                OnPropertyChanged("LeftHandScoreRegionVM");
+            }
+        }
+
+        public string RightHandScoreRegionVM
+        {
+            get { return rightHandScoreRegionVM; }
+            set
+            {
+                rightHandScoreRegionVM = value;
+                OnPropertyChanged("RightHandScoreRegionVM");
+            }
+        }
+
+        public int RightHandScoreRegion
+        {
+            get { return rightHandScoreRegion; }
+            set
+            {
+                rightHandScoreRegion = value;
+                OnPropertyChanged("RightHandScoreRegion");
+            }
+        }
+
+        public int LeftHandScoreRegion
+        {
+            get { return leftHandScoreRegion; }
+            set
+            {
+                leftHandScoreRegion = value;
+                OnPropertyChanged("LeftHandScoreRegion");
+            }
+        }
+
         public int LeftHandPlaceProtocol
         {
             get { return leftHandPlaceProtocol; }
@@ -111,6 +194,26 @@ namespace ArmBazaProject
             {
                 leftHandPlaceProtocol = value;
                 OnPropertyChanged("LeftHandPlaceProtocol");
+            }
+        }
+
+        public int LeftHandPlaceRegionProtocol
+        {
+            get { return leftHandPlaceRegionProtocol; }
+            set
+            {
+                leftHandPlaceRegionProtocol = value;
+                OnPropertyChanged("LeftHandPlaceRegionProtocol");
+            }
+        }
+
+        public int RightHandPlaceRegionProtocol
+        {
+            get { return rightHandPlaceRegionProtocol; }
+            set
+            {
+                rightHandPlaceRegionProtocol = value;
+                OnPropertyChanged("RightHandPlaceRegionProtocol");
             }
         }
 

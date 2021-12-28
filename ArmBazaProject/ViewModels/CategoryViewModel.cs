@@ -267,14 +267,7 @@ namespace ArmBazaProject
                     }
                 }
             }
-            if (!isExist)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return isExist;
 
         }
 

@@ -95,40 +95,6 @@ namespace ArmBazaProject.ViewModels
             allMembers = new ObservableCollection<MemberViewModel>();
             someMember = new MemberViewModel();
             dataBaseModel = new DataBaseModel();
-
-            //for (int i = 0; i < 200; i++)
-            //{
-            //    MemberViewModel member = new MemberViewModel();
-            //    member.Member.Weight = random.Next(45, 110);
-            //    member.Member.Gender = genders[random.Next(0, 2)];
-            //    member.Hand = hands[random.Next(0, 3)];
-            //    if (member.Member.Gender == "м")
-            //    {
-            //        member.Member.FullName = namesB[random.Next(0, namesB.Length)] +
-            //            " " + secondNamesB[random.Next(0, secondNamesB.Length)];
-            //    }
-            //    else
-            //    {
-            //        member.Member.FullName = namesG[random.Next(0, namesG.Length)] +
-            //            " " + secondNamesG[random.Next(0, secondNamesG.Length)];
-            //    }
-            //    member.TeamName = dataBaseModel.GetAllTeams()[random.Next(0, dataBaseModel.GetAllTeams().Length)];
-            //    if (member.Hand == "Обе")
-            //    {
-            //        member.IsSportTeamLeftHand = true;
-            //        member.IsSportTeamRightHand = true;
-            //    }
-            //    else if (member.Hand == "Левая")
-            //    {
-            //        member.IsSportTeamLeftHand = true;
-            //    }
-            //    else
-            //    {
-            //        member.IsSportTeamRightHand = true;
-            //    }
-
-            //    allMembers.Add(member);
-            //}
         }
 
         #region Данные из БД
