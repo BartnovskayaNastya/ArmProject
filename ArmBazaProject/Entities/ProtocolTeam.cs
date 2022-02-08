@@ -19,7 +19,6 @@ namespace ArmBazaProject.Entities
         private int resultRightHand;
 
         private int totalResult;
-        #endregion
 
         private int scoreG;
         private int scoreB;
@@ -30,9 +29,12 @@ namespace ArmBazaProject.Entities
         private int totalScore;
         private int totalPlace;
 
-        
+
 
         private string name;
+        #endregion
+
+
 
         #region properties
 

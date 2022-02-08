@@ -30,11 +30,11 @@
                                     <DataGridTextColumn  Header ="Разряд" Binding="{Binding QualificationName}" />
                                     <DataGridTextColumn  Header ="Дата рождения" Binding="{Binding Member.DateOfBirth}" />
                                     <DataGridTextColumn  Header ="Команда" Binding="{Binding TeamName}" />
-                                    <DataGridTextColumn  Header ="ОП-СК" Binding="{Binding RightHandScoreVM}" />
-                                    <DataGridTextColumn  Header ="ОЛ-СК" Binding="{Binding LeftHandScoreVM}" />
+                                    <DataGridTextColumn  Header ="СК-Правая" Binding="{Binding RightHandScoreVM}" />
+                                    <DataGridTextColumn  Header ="СК-Левая" Binding="{Binding LeftHandScoreVM}" />
                                     <DataGridTextColumn  Header ="Область" Binding="{Binding RegionName}" />
-                                    <DataGridTextColumn  Header ="ОП-Область" Binding="{Binding RightHandScoreRegionVM}" />
-                                    <DataGridTextColumn  Header ="ОЛ-Область" Binding="{Binding LeftHandScoreRegionVM}" />
+                                    <DataGridTextColumn  Header ="Обл-Правая" Binding="{Binding RightHandScoreRegionVM}" />
+                                    <DataGridTextColumn  Header ="Обл-Левая" Binding="{Binding LeftHandScoreRegionVM}" />
                                     <DataGridTextColumn  Header ="Тренер" Binding="{Binding TrainerName}" />
                                 </DataGrid.Columns>
                             </DataGrid>

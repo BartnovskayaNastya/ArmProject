@@ -306,10 +306,11 @@ namespace ArmBazaProject
             competitionVM.SortAllMembers(dataBaseModel.GetAllCategories("ж", competitionVM.CompetitionLeftHand.CategoryName),
                 dataBaseModel.GetAllCategories("м", competitionVM.CompetitionLeftHand.CategoryName));
 
-            TabBoysLeftHand.DataContext = null;
+            //исправить добавление без проблем!
+           /* TabBoysLeftHand.DataContext = null;
             TabBoysRighHand.DataContext = null;
             TabGirlsLeftHand.DataContext = null;
-            TabGirlsRighHand.DataContext = null;
+            TabGirlsRighHand.DataContext = null;*/
 
             //турнирные
             TabBoysLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesB;
@@ -414,10 +415,16 @@ namespace ArmBazaProject
             membersGrid.ItemsSource = competitionVM.AllMembers;
         }
 
-        private void getTotalProtocol_Click(object sender, RoutedEventArgs e)
+        private void getTotalProtocolTeam_Click(object sender, RoutedEventArgs e)
         {
             resultVM.GetTotalTeamResults();
             totalProtocolTeam.DataContext = resultVM.ResultSummaryTeams;
+        }
+
+        private void getTotalProtocolRegion_Click(object sender, RoutedEventArgs e)
+        {
+            resultVM.GetTotalRegionResults();
+            //totalProtocolRegion.DataContext = resultVM.ResultSummaryRegion;
         }
     }
 }

@@ -699,6 +699,7 @@ namespace ArmBazaProject.ViewModels
                         {
                             if (CheckMember(categoriesLeft[i].PlaceMembers[j], categoriesRight[i].PlaceMembers[k]))
                             {
+                                member.RightHandScore = categoriesRight[i].PlaceMembers[k].RightHandScore;
                                 member.RightHandScoreVM = categoriesRight[i].PlaceMembers[k].RightHandScore.ToString();
                                 member.RightHandPlaceVM = categoriesRight[i].PlaceMembers[k].RightHandPlace.ToString();
                                 member.RightHandScoreRegionVM = categoriesRight[i].PlaceMembers[k].RightHandScoreRegion.ToString();
@@ -713,7 +714,6 @@ namespace ArmBazaProject.ViewModels
                         member.LeftHandScoreRegionVM = member.LeftHandScoreRegion.ToString();
                         member.RightHandScoreVM = "";
                         member.RightHandPlaceVM = "";
-                        member.RightHandScoreRegionVM = "chack";
                     }
                     resultCategory[i].ResultMembers.Add(member);
                 }
@@ -788,13 +788,12 @@ namespace ArmBazaProject.ViewModels
 
         public void GetTotalTeamResults()
         {
-
-            GetCategotyTeams(ResultTeamCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
             GetCategotyTeams(ResultTeamCategoryBoys, competition.CompetitionLeftHand.CategoriesB, competition.CompetitionRightHand.CategoriesB);
-
+            GetCategotyTeams(ResultTeamCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
+            
 
             GetSummaryProtocolPoints(ResultTeamCategoryGirls, summaryTeamsG);
-            GetSummaryProtocolPoints(ResultTeamCategoryGirls, summaryTeamsB);
+            GetSummaryProtocolPoints(ResultTeamCategoryBoys, summaryTeamsB);
 
 
             resultSummaryTeams =  CollectDataTeams(summaryTeamsB, summaryTeamsG);
@@ -810,9 +809,9 @@ namespace ArmBazaProject.ViewModels
             TeamModel team;
             for (int i = 0; i < categoriesL.Length; i++)
             {
-                for (int j = 0; j < categoriesL[i].ResultMembers.Count; j++)
+                for (int j = 0; j < categoriesL[i].PlaceMembers.Count; j++)
                 {
-                    team = new TeamModel(categoriesL[i].ResultMembers[j].TeamName);
+                    team = new TeamModel(categoriesL[i].PlaceMembers[j].TeamName);
                     if (categories[i].Teams.Count == 0)
                     {
                         categories[i].Teams.Add(team);
@@ -829,9 +828,9 @@ namespace ArmBazaProject.ViewModels
 
             for (int i = 0; i < categoriesR.Length; i++)
             {
-                for (int j = 0; j < categoriesR[i].ResultMembers.Count; j++)
+                for (int j = 0; j < categoriesR[i].PlaceMembers.Count; j++)
                 {
-                    team = new TeamModel(categoriesR[i].ResultMembers[j].TeamName);
+                    team = new TeamModel(categoriesR[i].PlaceMembers[j].TeamName);
                     if (categories[i].Teams.Count == 0)
                     {
                         categories[i].Teams.Add(team);
@@ -846,46 +845,6 @@ namespace ArmBazaProject.ViewModels
                 }
             }
 
-        }
-
-        //получение мест для команд
-        private void GetResultTeam(CategoryViewModel[] categories)
-        {
-            MemberViewModel member;
-            int score = 0;
-            for (int i = 0; i < categories.Length; i++)
-            {
-                for (int j = 0; j < categories[i].ResultMembers.Count; j++)
-                {
-                    for (int k = 0; k < categories[i].Teams.Count; k++)
-                    {
-                        if (categories[i].ResultMembers[j].TeamName == categories[i].Teams[k].Name)
-                        {
-                            if (categories[i].ResultMembers[j].IsSportTeam)
-                            {
-                                if (categories[i].ResultMembers[j].isLeftHand && categories[i].ResultMembers[j].isRightHand)
-                                {
-                                    score = categories[i].ResultMembers[j].LeftHandScore + categories[i].ResultMembers[j].RightHandScore;
-                                }
-                                else if (categories[i].ResultMembers[j].isLeftHand && !categories[i].ResultMembers[j].isRightHand)
-                                {
-                                    score = categories[i].ResultMembers[j].LeftHandScore;
-                                }
-                                else if (!categories[i].ResultMembers[j].isLeftHand && categories[i].ResultMembers[j].isRightHand)
-                                {
-                                    score = categories[i].ResultMembers[j].RightHandScore;
-                                }
-                            }
-
-                            member = (MemberViewModel)categories[i].ResultMembers[j].Clone();
-                            categories[i].Teams[k].Score += score;
-                            categories[i].Teams[k].Members.Add(member);
-                        }
-                    }
-                }
-            }
-
-            SetPlaceTeam(categories);
         }
 
         //сортировка команд по очкам участников
@@ -905,21 +864,6 @@ namespace ArmBazaProject.ViewModels
                             categories[t].Teams[j] = temp;
                         }
                     }
-                }
-            }
-        }
-
-        //назначение места для команды
-        private void SetPlaceTeam(CategoryViewModel[] categories)
-        {
-            int place = 0;
-            SortTeams(categories);
-            for (int i = 0; i < categories.Length; i++)
-            {
-                for (int j = 0; j < categories[i].Teams.Count; j++)
-                {
-                    place = categories[i].Teams.Count - j;
-                    categories[i].Teams[j].Place = place;
                 }
             }
         }
@@ -972,7 +916,7 @@ namespace ArmBazaProject.ViewModels
                     {
                         summaryTeams.Add(protocolTeam);
                     }
-
+                    isContainsTeam=false;
                 }
 
             }
@@ -993,15 +937,15 @@ namespace ArmBazaProject.ViewModels
                                 {
                                     if (categories[i].Teams[j].Members[t].isLeftHand && categories[i].Teams[j].Members[t].isRightHand)
                                     {
-                                        score = categories[i].Teams[j].Members[t].LeftHandSTScore + categories[i].Teams[j].Members[t].RightHandSTScore;
+                                        score = categories[i].Teams[j].Members[t].LeftHandScore + categories[i].Teams[j].Members[t].RightHandScore;
                                     }
                                     else if (categories[i].Teams[j].Members[t].isLeftHand && !categories[i].Teams[j].Members[t].isRightHand)
                                     {
-                                        score = categories[i].Teams[j].Members[t].LeftHandSTScore;
+                                        score = categories[i].Teams[j].Members[t].LeftHandScore;
                                     }
                                     else if (!categories[i].Teams[j].Members[t].isLeftHand && categories[i].Teams[j].Members[t].isRightHand)
                                     {
-                                        score = categories[i].Teams[j].Members[t].RightHandSTScore;
+                                        score = categories[i].Teams[j].Members[t].RightHandScore;
                                     }
                                     isSportTeam = true;
 
@@ -1052,22 +996,84 @@ namespace ArmBazaProject.ViewModels
             }
         }
 
-        private ObservableCollection<ProtocolTeam> CollectDataTeams(ObservableCollection<ProtocolTeam> summaryTeams1, ObservableCollection<ProtocolTeam> summaryTeams2)
+        private ObservableCollection<ProtocolTeam> CollectDataTeams(ObservableCollection<ProtocolTeam> summaryTeamsB, ObservableCollection<ProtocolTeam> summaryTeamsG)
         {
-            for (int i = 0; i < summaryTeams1.Count; i++)
+            bool isTeamExist = false;
+            ObservableCollection<ProtocolTeam> summaryTeams = new ObservableCollection<ProtocolTeam>();
+            for (int i = 0; i < summaryTeamsB.Count; i++)
             {
-                summaryTeams2[i].ScoreB = summaryTeams1[i].ScoreB;
+                isTeamExist = false;
+                if (summaryTeams.Count == 0)
+                {
+                    summaryTeams.Add(new ProtocolTeam(summaryTeamsB[i].Name));
+                    summaryTeams[0].ScoreB = summaryTeamsB[i].ScoreB;
+                }
+                else
+                {
+                    for (int j = 0; j < summaryTeams.Count; j++)
+                    {
+                        if (summaryTeams[j].Name == summaryTeamsB[i].Name)
+                        {
+                            isTeamExist = true;
+                        }
+                    }
+                    if (!isTeamExist)
+                    {
+                        summaryTeams.Add(new ProtocolTeam(summaryTeamsB[i].Name));
+                        summaryTeams[summaryTeams.Count-1].ScoreB = summaryTeamsB[i].ScoreB;
+                    }
+                }
             }
 
-            for (int k = 0; k < summaryTeams2.Count; k++)
+
+
+            for (int i = 0; i < summaryTeamsG.Count; i++)
             {
-                summaryTeams2[k].TotalScore = summaryTeams2[k].ScoreB + summaryTeams2[k].ScoreG;
+                for (int j = 0; j < summaryTeams.Count; j++)
+                {
+                    if(summaryTeams[j].Name == summaryTeamsG[i].Name)
+                    {
+                        summaryTeams[j].ScoreG = summaryTeamsG[i].ScoreG;
+                        
+                    }
+                    else
+                    {
+                        for (int l = 0; l < summaryTeams.Count; l++)
+                        {
+                            if (summaryTeams[l].Name == summaryTeamsG[i].Name)
+                            {
+                                isTeamExist = true;
+                            }
+                        }
+                        if (!isTeamExist)
+                        {
+                            summaryTeams.Add(new ProtocolTeam(summaryTeamsG[i].Name));
+                            summaryTeams[summaryTeams.Count - 1].ScoreG = summaryTeamsG[i].ScoreG;
+                        }
+                        isTeamExist=false;
+                        
+                    }
+                }
             }
 
-            return summaryTeams2;
+            for (int j = 0; j < summaryTeams.Count; j++)
+            {
+                summaryTeams[j].TotalScore = summaryTeams[j].ScoreG + summaryTeams[j].ScoreB;
+            }
+            return summaryTeams;
         }
 
+
         #endregion
+
+        public void GetTotalRegionResults()
+        {
+
+        }
+
+        #region ResultRegionProtocol
+        #endregion  
+
 
     }
 }
