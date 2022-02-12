@@ -491,18 +491,20 @@
                         <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition/>
+                                <ColumnDefinition Width="20"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button HorizontalAlignment="Center"  Grid.Column="0" Grid.Row="0" Content="Посчитать очки" Click="getTotalProtocolTeam_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
-                            <local1:SummaryProtocolSK Grid.Row="1" Grid.Column="0" x:Name="totalProtocolTeam" DataContext="{Binding}"></local1:SummaryProtocolSK>
+                            <Button HorizontalAlignment="Center" Grid.ColumnSpan="3"  Grid.Column="0" Grid.Row="0" Content="Посчитать очки" Click="getTotalProtocolTeam_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
+                            <Label Background="#FF99CED2" HorizontalAlignment="Center" Content="Команда" Grid.Row="1" Grid.Column="0"></Label>
+                            <Label Background="#FF9AA5C3" HorizontalAlignment="Center" Content="Регион" Grid.Row="1" Grid.Column="2"></Label>
+                            <local1:SummaryProtocolSK Grid.Row="2" Grid.Column="0" x:Name="totalProtocolTeam" DataContext="{Binding}"></local1:SummaryProtocolSK>
 
-
-                            <Button HorizontalAlignment="Center"  Grid.Row="0"  Grid.Column="1" Content="Посчитать очки" Click="getTotalProtocolRegion_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
-                            <local1:SummaryProtocolSK Grid.Row="1" Grid.Column="1" x:Name="totalProtocolRegion" DataContext="{Binding}"></local1:SummaryProtocolSK>
+                            <local1:SummaryProtocolSK Grid.Row="2" Grid.Column="2" x:Name="totalProtocolRegion" DataContext="{Binding}"></local1:SummaryProtocolSK>
                             
                            
                             

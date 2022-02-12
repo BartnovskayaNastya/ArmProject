@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace ArmBazaProject.Entities
 {
-    public class TeamModel : NotifyableObject
+    public class ProtocolResultModel : NotifyableObject
     {
         private string name;
         private ObservableCollection<MemberViewModel> members;
@@ -50,7 +50,7 @@ namespace ArmBazaProject.Entities
             }
         }
 
-        public TeamModel(string name)
+        public ProtocolResultModel(string name)
         {
             this.name = name;
             members = new ObservableCollection<MemberViewModel>();

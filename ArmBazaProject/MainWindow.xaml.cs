@@ -417,14 +417,10 @@ namespace ArmBazaProject
 
         private void getTotalProtocolTeam_Click(object sender, RoutedEventArgs e)
         {
-            resultVM.GetTotalTeamResults();
+            resultVM.GetTotalResults();
             totalProtocolTeam.DataContext = resultVM.ResultSummaryTeams;
+            totalProtocolRegion.DataContext = resultVM.ResultSummaryRegions;
         }
 
-        private void getTotalProtocolRegion_Click(object sender, RoutedEventArgs e)
-        {
-            resultVM.GetTotalRegionResults();
-            //totalProtocolRegion.DataContext = resultVM.ResultSummaryRegion;
-        }
     }
 }

@@ -22,10 +22,15 @@ namespace ArmBazaProject.ViewModels
         CategoryViewModel[] resultRegionCategoryBoys;
         CategoryViewModel[] resultRegionCategoryGirls;
 
-        private ObservableCollection<ProtocolTeam> summaryTeamsG;
-        private ObservableCollection<ProtocolTeam> summaryTeamsB;
+        private ObservableCollection<ProtocolModel> summaryTeamsG;
+        private ObservableCollection<ProtocolModel> summaryTeamsB;
 
-        private ObservableCollection<ProtocolTeam> resultSummaryTeams;
+        private ObservableCollection<ProtocolModel> resultSummaryTeams;
+
+        private ObservableCollection<ProtocolModel> summaryRegionsG;
+        private ObservableCollection<ProtocolModel> summaryRegionsB;
+
+        private ObservableCollection<ProtocolModel> resultSummaryRegions;
 
 
         private int[] protocolPoints = new int[] { 25, 17, 9, 5, 3, 2 };
@@ -60,7 +65,20 @@ namespace ArmBazaProject.ViewModels
             }
         }
 
-        public ObservableCollection<ProtocolTeam> ResultSummaryTeams
+        public ObservableCollection<ProtocolModel> ResultSummaryRegions
+        {
+            get { return resultSummaryRegions; }
+            set
+            {
+                if (resultSummaryRegions != value)
+                {
+                    resultSummaryRegions = value;
+                    OnPropertyChanged("ResultSummaryRegions");
+                }
+            }
+        }
+
+        public ObservableCollection<ProtocolModel> ResultSummaryTeams
         {
             get { return resultSummaryTeams; }
             set
@@ -73,7 +91,7 @@ namespace ArmBazaProject.ViewModels
             }
         }
 
-        public ObservableCollection<ProtocolTeam> SummaryTeamsB
+        public ObservableCollection<ProtocolModel> SummaryTeamsB
         {
             get { return summaryTeamsB; }
             set
@@ -85,7 +103,7 @@ namespace ArmBazaProject.ViewModels
                 }
             }
         }
-        public ObservableCollection<ProtocolTeam> SummaryTeamsG
+        public ObservableCollection<ProtocolModel> SummaryTeamsG
         {
             get { return summaryTeamsG; }
             set
@@ -175,9 +193,13 @@ namespace ArmBazaProject.ViewModels
             resultTeamCategoryBoys = new CategoryViewModel[competition.CompetitionLeftHand.BoysWeights.Length];
             resultRegionCategoryBoys = new CategoryViewModel[competition.CompetitionLeftHand.BoysWeights.Length];
             resultRegionCategoryGirls = new CategoryViewModel[competition.CompetitionLeftHand.GirlsWeights.Length];
-            summaryTeamsG = new ObservableCollection<ProtocolTeam>();
-            summaryTeamsB = new ObservableCollection<ProtocolTeam>();
-            resultSummaryTeams = new ObservableCollection<ProtocolTeam>();
+            summaryTeamsG = new ObservableCollection<ProtocolModel>();
+            summaryTeamsB = new ObservableCollection<ProtocolModel>();
+            resultSummaryTeams = new ObservableCollection<ProtocolModel>();
+
+            summaryRegionsG = new ObservableCollection<ProtocolModel>();
+            summaryRegionsB = new ObservableCollection<ProtocolModel>();
+            resultSummaryRegions = new ObservableCollection<ProtocolModel>();
         }
 
         public void GetResultsTwoHand()
@@ -786,32 +808,34 @@ namespace ArmBazaProject.ViewModels
         #endregion
 
 
-        public void GetTotalTeamResults()
+        public void GetTotalResults()
         {
-            GetCategotyTeams(ResultTeamCategoryBoys, competition.CompetitionLeftHand.CategoriesB, competition.CompetitionRightHand.CategoriesB);
-            GetCategotyTeams(ResultTeamCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
+            GetCategotyModels(ResultTeamCategoryBoys, competition.CompetitionLeftHand.CategoriesB, competition.CompetitionRightHand.CategoriesB);
+            GetCategotyModels(ResultTeamCategoryGirls, competition.CompetitionLeftHand.CategoriesG, competition.CompetitionRightHand.CategoriesG);
             
 
-            GetSummaryProtocolPoints(ResultTeamCategoryGirls, summaryTeamsG);
-            GetSummaryProtocolPoints(ResultTeamCategoryBoys, summaryTeamsB);
+            GetSummaryProtocolPoints(ResultTeamCategoryGirls, summaryTeamsG, summaryRegionsG);
+            GetSummaryProtocolPoints(ResultTeamCategoryBoys, summaryTeamsB, summaryRegionsB);
 
 
-            resultSummaryTeams =  CollectDataTeams(summaryTeamsB, summaryTeamsG);
+            CollectDataModel(summaryTeamsB, summaryTeamsG, summaryRegionsB, summaryRegionsG);
 
 
-            SetPlaceSummaryTeams(resultSummaryTeams);
+            SetPlaceSummaryModels(resultSummaryTeams, resultSummaryRegions);
         }
 
         #region ResultTeamProtocol
 
-        private void GetCategotyTeams(CategoryViewModel[] categories, CategoryViewModel[] categoriesL, CategoryViewModel[] categoriesR)
+        private void GetCategotyModels(CategoryViewModel[] categories, CategoryViewModel[] categoriesL, CategoryViewModel[] categoriesR)
         {
-            TeamModel team;
+            ProtocolResultModel team;
+            ProtocolResultModel region;
             for (int i = 0; i < categoriesL.Length; i++)
             {
                 for (int j = 0; j < categoriesL[i].PlaceMembers.Count; j++)
                 {
-                    team = new TeamModel(categoriesL[i].PlaceMembers[j].TeamName);
+                    team = new ProtocolResultModel(categoriesL[i].PlaceMembers[j].TeamName);
+                    region = new ProtocolResultModel(categoriesL[i].PlaceMembers[j].RegionName);
                     if (categories[i].Teams.Count == 0)
                     {
                         categories[i].Teams.Add(team);
@@ -822,6 +846,14 @@ namespace ArmBazaProject.ViewModels
                         {
                             categories[i].Teams.Add(team);
                         }
+                    }
+                    if (categories[i].Regions.Count == 0)
+                    {
+                        categories[i].Regions.Add(region);
+                    }
+                    else if (!categories[i].CheckRegion(region))
+                    {
+                        categories[i].Regions.Add(region);
                     }
                 }
             }
@@ -830,7 +862,8 @@ namespace ArmBazaProject.ViewModels
             {
                 for (int j = 0; j < categoriesR[i].PlaceMembers.Count; j++)
                 {
-                    team = new TeamModel(categoriesR[i].PlaceMembers[j].TeamName);
+                    team = new ProtocolResultModel(categoriesR[i].PlaceMembers[j].TeamName);
+                    region = new ProtocolResultModel(categoriesL[i].PlaceMembers[j].RegionName);
                     if (categories[i].Teams.Count == 0)
                     {
                         categories[i].Teams.Add(team);
@@ -842,62 +875,34 @@ namespace ArmBazaProject.ViewModels
                             categories[i].Teams.Add(team);
                         }
                     }
-                }
-            }
 
-        }
-
-        //сортировка команд по очкам участников
-        private void SortTeams(CategoryViewModel[] categories)
-        {
-            TeamModel temp;
-            for (int t = 0; t < categories.Length; t++)
-            {
-                for (int i = 0; i < categories[t].Teams.Count - 1; i++)
-                {
-                    for (int j = i + 1; j < categories[t].Teams.Count; j++)
+                    if (categories[i].Regions.Count == 0)
                     {
-                        if (categories[t].Teams[i].Score > categories[t].Teams[j].Score)
-                        {
-                            temp = categories[t].Teams[i];
-                            categories[t].Teams[i] = categories[t].Teams[j];
-                            categories[t].Teams[j] = temp;
-                        }
+                        categories[i].Regions.Add(region);
+                    }
+                    else if (!categories[i].CheckRegion(region))
+                    {
+                        categories[i].Regions.Add(region);
                     }
                 }
             }
-        }
-
-        private void GetMembersToTeam(CategoryViewModel[] categories)
-        {
-            for (int i = 0; i < categories.Length; i++)
-            {
-                for (int j = 0; j < categories[i].ResultMembers.Count; j++)
-                {
-                    for (int k = 0; k < categories[i].Teams.Count; k++)
-                    {
-                        if (categories[i].ResultMembers[j].TeamName == categories[i].Teams[k].Name)
-                        {
-                            categories[i].Teams[k].Members.Add((MemberViewModel)categories[i].ResultMembers[j].Clone());
-                        }
-                    }
-
-                }
-            }
 
         }
 
-        private void GetSummaryProtocolPoints(CategoryViewModel[] categories, ObservableCollection<ProtocolTeam> summaryTeams)
+        private void GetSummaryProtocolPoints(CategoryViewModel[] categories, ObservableCollection<ProtocolModel> summaryTeams, ObservableCollection<ProtocolModel> summaryRegions)
         {
             int score = 0;
             bool isSportTeam = false;
             bool isContainsTeam = false;
-            ProtocolTeam protocolTeam;
+            bool isRegion = false;
+            bool isContainsRegion = false;
+            ProtocolModel protocolTeam;
+            ProtocolModel protocolRegion;
             for (int k = 0; k < categories.Length; k++)
             {
                 for (int l = 0; l < categories[k].Teams.Count; l++)
                 {
-                    protocolTeam = new ProtocolTeam(categories[k].Teams[l].Name);
+                    protocolTeam = new ProtocolModel(categories[k].Teams[l].Name);
                     if (summaryTeams.Count > 0)
                     {
                         for (int i = 0; i < summaryTeams.Count; i++)
@@ -919,12 +924,37 @@ namespace ArmBazaProject.ViewModels
                     isContainsTeam=false;
                 }
 
+                for (int l = 0; l < categories[k].Regions.Count; l++)
+                {
+                    protocolRegion = new ProtocolModel(categories[k].Regions[l].Name);
+                    if (summaryRegions.Count > 0)
+                    {
+                        for (int i = 0; i < summaryRegions.Count; i++)
+                        {
+                            if (summaryRegions[i].Name == protocolRegion.Name)
+                            {
+                                isContainsRegion = true;
+                            }
+                        }
+                        if (!isContainsRegion)
+                        {
+                            summaryRegions.Add(protocolRegion);
+                        }
+                    }
+                    else
+                    {
+                        summaryRegions.Add(protocolRegion);
+                    }
+                    isContainsRegion = false;
+                }
+
             }
 
-            GetMembersToTeam(categories);
+            GetMembersToModels(categories);
 
             for (int i = 0; i < categories.Length; i++)
             {
+                //teams
                 for (int j = 0; j < categories[i].Teams.Count; j++)
                 {
                     for (int k = 0; k < summaryTeams.Count; k++)
@@ -964,103 +994,240 @@ namespace ArmBazaProject.ViewModels
                         }
                     }
                 }
-            }
 
-        }
-
-        private void SortSummaryTeams(ObservableCollection<ProtocolTeam> summaryTeams)
-        {
-            ProtocolTeam temp;
-            for (int i = 0; i < summaryTeams.Count - 1; i++)
-            {
-                for (int j = i + 1; j < summaryTeams.Count; j++)
+                //region
+                for (int j = 0; j < categories[i].Regions.Count; j++)
                 {
-                    if (summaryTeams[i].TotalScore > summaryTeams[j].TotalScore)
+                    for (int k = 0; k < summaryRegions.Count; k++)
                     {
-                        temp = summaryTeams[i];
-                        summaryTeams[i] = summaryTeams[j];
-                        summaryTeams[j] = temp;
+                        if (categories[i].Regions[j].Name == summaryRegions[k].Name)
+                        {
+                            for (int t = 0; t < categories[i].Regions[j].Members.Count; t++)
+                            {
+                                if (categories[i].Regions[j].Members[t].IsSportTeam)
+                                {
+                                    if (categories[i].Regions[j].Members[t].isLeftHand && categories[i].Regions[j].Members[t].isRightHand)
+                                    {
+                                        score = categories[i].Regions[j].Members[t].LeftHandScore + categories[i].Regions[j].Members[t].RightHandScore;
+                                    }
+                                    else if (categories[i].Regions[j].Members[t].isLeftHand && !categories[i].Regions[j].Members[t].isRightHand)
+                                    {
+                                        score = categories[i].Regions[j].Members[t].LeftHandScore;
+                                    }
+                                    else if (!categories[i].Regions[j].Members[t].isLeftHand && categories[i].Regions[j].Members[t].isRightHand)
+                                    {
+                                        score = categories[i].Regions[j].Members[t].RightHandScore;
+                                    }
+                                    isRegion = true;
+
+                                }
+
+                                if (categories[i].Regions[j].Members[t].Member.Gender == "ж" && isRegion)
+                                {
+                                    summaryRegions[k].ScoreG += score;
+                                }
+                                else if (categories[i].Regions[j].Members[t].Member.Gender == "м" && isRegion)
+                                {
+                                    summaryRegions[k].ScoreB += score;
+                                }
+                                isRegion = false;
+                            }
+                        }
                     }
                 }
             }
 
         }
-        private void SetPlaceSummaryTeams(ObservableCollection<ProtocolTeam> summaryTeams)
+
+
+        private void GetMembersToModels(CategoryViewModel[] categories)
+        {
+            for (int i = 0; i < categories.Length; i++)
+            {
+                for (int j = 0; j < categories[i].ResultMembers.Count; j++)
+                {
+                    for (int k = 0; k < categories[i].Teams.Count; k++)
+                    {
+                        if (categories[i].ResultMembers[j].TeamName == categories[i].Teams[k].Name)
+                        {
+                            categories[i].Teams[k].Members.Add((MemberViewModel)categories[i].ResultMembers[j].Clone());
+                        }
+                    }
+
+                    for (int k = 0; k < categories[i].Regions.Count; k++)
+                    {
+                        if (categories[i].ResultMembers[j].RegionName == categories[i].Regions[k].Name)
+                        {
+                            categories[i].Regions[k].Members.Add((MemberViewModel)categories[i].ResultMembers[j].Clone());
+                        }
+                    }
+
+                }
+            }
+
+        }
+
+        private void SortSummaryModels(ObservableCollection<ProtocolModel> summaryModel)
+        {
+            ProtocolModel temp;
+            for (int i = 0; i < summaryModel.Count - 1; i++)
+            {
+                for (int j = i + 1; j < summaryModel.Count; j++)
+                {
+                    if (summaryModel[i].TotalScore > summaryModel[j].TotalScore)
+                    {
+                        temp = summaryModel[i];
+                        summaryModel[i] = summaryModel[j];
+                        summaryModel[j] = temp;
+                    }
+                }
+            }
+
+        }
+        private void SetPlaceSummaryModels(ObservableCollection<ProtocolModel> summaryTeams, ObservableCollection<ProtocolModel> summaryRegions)
         {
             int place = 0;
-            SortSummaryTeams(summaryTeams);
+            SortSummaryModels(summaryTeams);
+            SortSummaryModels(summaryRegions);
             for (int i = 0; i < summaryTeams.Count; i++)
             {
                 place = summaryTeams.Count - i;
                 summaryTeams[i].TotalPlace = place;
             }
+
+            for (int i = 0; i < summaryRegions.Count; i++)
+            {
+                place = summaryRegions.Count - i;
+                summaryRegions[i].TotalPlace = place;
+            }
         }
 
-        private ObservableCollection<ProtocolTeam> CollectDataTeams(ObservableCollection<ProtocolTeam> summaryTeamsB, ObservableCollection<ProtocolTeam> summaryTeamsG)
+        private void CollectDataModel(ObservableCollection<ProtocolModel> summaryTeamsB, ObservableCollection<ProtocolModel> summaryTeamsG, ObservableCollection<ProtocolModel> summaryRegionsB, ObservableCollection<ProtocolModel> summaryRegionsG)
         {
-            bool isTeamExist = false;
-            ObservableCollection<ProtocolTeam> summaryTeams = new ObservableCollection<ProtocolTeam>();
+            //team
+            bool isExist = false;
             for (int i = 0; i < summaryTeamsB.Count; i++)
             {
-                isTeamExist = false;
-                if (summaryTeams.Count == 0)
+                isExist = false;
+                if (resultSummaryTeams.Count == 0)
                 {
-                    summaryTeams.Add(new ProtocolTeam(summaryTeamsB[i].Name));
-                    summaryTeams[0].ScoreB = summaryTeamsB[i].ScoreB;
+                    resultSummaryTeams.Add(new ProtocolModel(summaryTeamsB[i].Name));
+                    resultSummaryTeams[0].ScoreB = summaryTeamsB[i].ScoreB;
                 }
                 else
                 {
-                    for (int j = 0; j < summaryTeams.Count; j++)
+                    for (int j = 0; j < resultSummaryTeams.Count; j++)
                     {
-                        if (summaryTeams[j].Name == summaryTeamsB[i].Name)
+                        if (resultSummaryTeams[j].Name == summaryTeamsB[i].Name)
                         {
-                            isTeamExist = true;
+                            isExist = true;
                         }
                     }
-                    if (!isTeamExist)
+                    if (!isExist)
                     {
-                        summaryTeams.Add(new ProtocolTeam(summaryTeamsB[i].Name));
-                        summaryTeams[summaryTeams.Count-1].ScoreB = summaryTeamsB[i].ScoreB;
+                        resultSummaryTeams.Add(new ProtocolModel(summaryTeamsB[i].Name));
+                        resultSummaryTeams[resultSummaryTeams.Count-1].ScoreB = summaryTeamsB[i].ScoreB;
                     }
                 }
             }
 
-
-
             for (int i = 0; i < summaryTeamsG.Count; i++)
             {
-                for (int j = 0; j < summaryTeams.Count; j++)
+                for (int j = 0; j < resultSummaryTeams.Count; j++)
                 {
-                    if(summaryTeams[j].Name == summaryTeamsG[i].Name)
+                    if(resultSummaryTeams[j].Name == summaryTeamsG[i].Name)
                     {
-                        summaryTeams[j].ScoreG = summaryTeamsG[i].ScoreG;
+                        resultSummaryTeams[j].ScoreG = summaryTeamsG[i].ScoreG;
                         
                     }
                     else
                     {
-                        for (int l = 0; l < summaryTeams.Count; l++)
+                        for (int l = 0; l < resultSummaryTeams.Count; l++)
                         {
-                            if (summaryTeams[l].Name == summaryTeamsG[i].Name)
+                            if (resultSummaryTeams[l].Name == summaryTeamsG[i].Name)
                             {
-                                isTeamExist = true;
+                                isExist = true;
                             }
                         }
-                        if (!isTeamExist)
+                        if (!isExist)
                         {
-                            summaryTeams.Add(new ProtocolTeam(summaryTeamsG[i].Name));
-                            summaryTeams[summaryTeams.Count - 1].ScoreG = summaryTeamsG[i].ScoreG;
+                            resultSummaryTeams.Add(new ProtocolModel(summaryTeamsG[i].Name));
+                            resultSummaryTeams[resultSummaryTeams.Count - 1].ScoreG = summaryTeamsG[i].ScoreG;
                         }
-                        isTeamExist=false;
+                        isExist = false;
                         
                     }
                 }
             }
 
-            for (int j = 0; j < summaryTeams.Count; j++)
+            for (int j = 0; j < resultSummaryTeams.Count; j++)
             {
-                summaryTeams[j].TotalScore = summaryTeams[j].ScoreG + summaryTeams[j].ScoreB;
+                resultSummaryTeams[j].TotalScore = resultSummaryTeams[j].ScoreG + resultSummaryTeams[j].ScoreB;
             }
-            return summaryTeams;
+
+            //region
+            isExist = false;
+
+            for (int i = 0; i < summaryRegionsB.Count; i++)
+            {
+                isExist = false;
+                if (resultSummaryRegions.Count == 0)
+                {
+                    resultSummaryRegions.Add(new ProtocolModel(summaryRegionsB[i].Name));
+                    resultSummaryRegions[0].ScoreB = summaryRegionsB[i].ScoreB;
+                }
+                else
+                {
+                    for (int j = 0; j < resultSummaryRegions.Count; j++)
+                    {
+                        if (resultSummaryRegions[j].Name == summaryRegionsB[i].Name)
+                        {
+                            isExist = true;
+                        }
+                    }
+                    if (!isExist)
+                    {
+                        resultSummaryRegions.Add(new ProtocolModel(summaryRegionsB[i].Name));
+                        resultSummaryRegions[resultSummaryRegions.Count - 1].ScoreB = summaryRegionsB[i].ScoreB;
+                    }
+                }
+            }
+
+
+
+            for (int i = 0; i < summaryRegionsG.Count; i++)
+            {
+                for (int j = 0; j < resultSummaryRegions.Count; j++)
+                {
+                    if (resultSummaryRegions[j].Name == summaryRegionsG[i].Name)
+                    {
+                        resultSummaryRegions[j].ScoreG = summaryRegionsG[i].ScoreG;
+
+                    }
+                    else
+                    {
+                        for (int l = 0; l < resultSummaryRegions.Count; l++)
+                        {
+                            if (resultSummaryRegions[l].Name == summaryRegionsG[i].Name)
+                            {
+                                isExist = true;
+                            }
+                        }
+                        if (!isExist)
+                        {
+                            resultSummaryRegions.Add(new ProtocolModel(summaryRegionsG[i].Name));
+                            resultSummaryRegions[resultSummaryRegions.Count - 1].ScoreG = summaryRegionsG[i].ScoreG;
+                        }
+                        isExist = false;
+
+                    }
+                }
+            }
+
+            for (int j = 0; j < resultSummaryRegions.Count; j++)
+            {
+                resultSummaryRegions[j].TotalScore = resultSummaryRegions[j].ScoreG + resultSummaryRegions[j].ScoreB;
+            }
         }
 
 

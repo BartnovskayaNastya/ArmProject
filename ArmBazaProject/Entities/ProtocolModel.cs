@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ArmBazaProject.Entities
 {
-    class ProtocolTeam : NotifyableObject
+    class ProtocolModel : NotifyableObject
     {
         #region переменные
         private List<string> pointsLeftHandVM;
@@ -191,7 +191,7 @@ namespace ArmBazaProject.Entities
 
         #endregion
 
-        public ProtocolTeam(string teamName)
+        public ProtocolModel(string teamName)
         {
             name = teamName;
 

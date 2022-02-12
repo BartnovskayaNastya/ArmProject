@@ -85,11 +85,10 @@
     <Compile Include="BLModels\ApplicationContext.cs" />
     <Compile Include="Entities\NotifyableObject.cs" />
     <Compile Include="Entities\Points.cs" />
-    <Compile Include="Entities\ProtocolRegion.cs" />
-    <Compile Include="Entities\ProtocolTeam.cs" />
+    <Compile Include="Entities\ProtocolModel.cs" />
     <Compile Include="Entities\Result.cs" />
     <Compile Include="Entities\Serializator.cs" />
-    <Compile Include="Entities\TeamModel.cs" />
+    <Compile Include="Entities\ProtocolResultModel.cs" />
     <Compile Include="Entities\Toure.cs" />
     <Compile Include="UserControlWindows\DataGridCategory.xaml.cs">
       <DependentUpon>DataGridCategory.xaml</DependentUpon>

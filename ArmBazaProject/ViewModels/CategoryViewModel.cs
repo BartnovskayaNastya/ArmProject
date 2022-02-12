@@ -44,11 +44,11 @@ namespace ArmBazaProject
         private ObservableCollection<MemberViewModel> semifinal;
         private ToureViewModel final;
 
+        private ObservableCollection<ProtocolResultModel> regions;
 
+        private ObservableCollection<ProtocolResultModel> teams;
 
-        private ObservableCollection<TeamModel> teams;
-
-        private ObservableCollection<TeamModel> resultTeams;
+        private ObservableCollection<ProtocolResultModel> resultTeams;
 
 
         #endregion
@@ -79,7 +79,7 @@ namespace ArmBazaProject
             }
         }
 
-        public ObservableCollection<TeamModel> ResultTeams
+        public ObservableCollection<ProtocolResultModel> ResultTeams
         {
             get { return resultTeams; }
             set
@@ -92,7 +92,20 @@ namespace ArmBazaProject
             }
         }
 
-        public ObservableCollection<TeamModel> Teams
+        public ObservableCollection<ProtocolResultModel> Regions
+        {
+            get { return regions; }
+            set
+            {
+                if (regions != value)
+                {
+                    regions = value;
+                    OnPropertyChanged("Regions");
+                }
+            }
+        }
+
+        public ObservableCollection<ProtocolResultModel> Teams
         {
             get { return teams; }
             set
@@ -211,8 +224,10 @@ namespace ArmBazaProject
             final = new ToureViewModel();
             semifinal = new ObservableCollection<MemberViewModel>();
 
-            teams = new ObservableCollection<TeamModel>();
-            resultTeams = new ObservableCollection<TeamModel>();
+            regions = new ObservableCollection<ProtocolResultModel>();
+
+            teams = new ObservableCollection<ProtocolResultModel>();
+            resultTeams = new ObservableCollection<ProtocolResultModel>();
 
             StartToureCommand = new DelegateCommand(StartCommand);
             FirstToureCommand = new DelegateCommand(FirstCommand);
@@ -229,10 +244,10 @@ namespace ArmBazaProject
 
         public void SetTeams()
         {
-            TeamModel team;
+            ProtocolResultModel team;
             for (int i = 0; i < allMembers.Count; i++)
             {
-                team = new TeamModel(allMembers[i].TeamName);
+                team = new ProtocolResultModel(allMembers[i].TeamName);
                 if (!CheckTeam(team))
                 {
                     teams.Add(team);
@@ -242,23 +257,42 @@ namespace ArmBazaProject
 
         public void RandomDraw(object param)
         {
-            MemberViewModel tmp;
-            int j;
-            for (int i = allMembers.Count - 1; i >= 1; i--)
+            Random rng = new Random();
+            int n = allMembers.Count;
+            while (n > 1)
             {
-                j = random.Next(i + 1);
-                tmp = allMembers[j];
-                allMembers[j] = allMembers[i];
-                allMembers[i] = tmp;
+                n--;
+                int k = rng.Next(n + 1);
+                MemberViewModel value = allMembers[k];
+                allMembers[k] = allMembers[n];
+                allMembers[n] = value;
             }
         }
 
-        public bool CheckTeam(TeamModel teamToAdd)
+        public bool CheckRegion(ProtocolResultModel regionToAdd)
+        {
+            bool isExist = false;
+            if (regions.Count > 0)
+            {
+                foreach (ProtocolResultModel region in regions)
+                {
+                    if (region.Name == regionToAdd.Name)
+                    {
+                        isExist = true;
+                        break;
+                    }
+                }
+            }
+            return isExist;
+
+        }
+
+        public bool CheckTeam(ProtocolResultModel teamToAdd)
         {
             bool isExist = false;
             if(teams.Count > 0)
             {
-                foreach (TeamModel team in teams)
+                foreach (ProtocolResultModel team in teams)
                 {
                     if (team.Name == teamToAdd.Name)
                     {

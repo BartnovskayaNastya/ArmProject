@@ -216,7 +216,7 @@ namespace ArmBazaProject.ViewModels
         {
             for (int i = 0; i < categories.Length; i++)
             {
-                categories[i].Teams = new ObservableCollection<Entities.TeamModel>();
+                categories[i].Teams = new ObservableCollection<Entities.ProtocolResultModel>();
                 categories[i].SetTeams();
             }
         }
