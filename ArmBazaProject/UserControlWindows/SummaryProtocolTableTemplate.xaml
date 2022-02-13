@@ -22,7 +22,9 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ResultMembers}" >
+                            <DataGrid RowBackground="#c2c2c2" 
+                                          AlternatingRowBackground="#f9e1fa" 
+                                          Background="White" AutoGenerateColumns="False" ItemsSource="{Binding ResultMembers}" >
                                 <DataGrid.Columns>
                                     <DataGridTextColumn  Header ="Место Правая" Binding="{Binding RightHandPlaceVM}" />
                                     <DataGridTextColumn  Header ="Место Левая" Binding="{Binding LeftHandPlaceVM}" />

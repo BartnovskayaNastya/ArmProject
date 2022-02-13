@@ -334,22 +334,28 @@ namespace ArmBazaProject
 
         private void saveParametrsCompetition_Click(object sender, RoutedEventArgs e)
         {
-            membersGrid.ItemsSource = competitionVM.AllMembers;
-            GenderComboBox.ItemsSource = competitionVM.genders;
-            HandComboBox.ItemsSource = competitionVM.hands;
-            QualificationComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllQualifications();
-            RegionComboBoxz.ItemsSource = competitionVM.DataBaseModel.GetAllRegions();
-            TeamComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllTeams();
-            membersGrid.CellEditEnding += cellEditEnding;
+            if(ageCategoryCB.SelectedValue == null || pointsCB.SelectedValue == null)
+            {
+                MessageBox.Show("Вы не указали очки и/или возрастную категорию.", "Уведомление");
+            }
+            else
+            {
+                membersGrid.ItemsSource = competitionVM.AllMembers;
+                GenderComboBox.ItemsSource = competitionVM.genders;
+                HandComboBox.ItemsSource = competitionVM.hands;
+                QualificationComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllQualifications();
+                RegionComboBoxz.ItemsSource = competitionVM.DataBaseModel.GetAllRegions();
+                TeamComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllTeams();
+                membersGrid.CellEditEnding += cellEditEnding;
 
-            competitionVM.SetWeights(dataBaseModel.GetAllCategories("ж", ageCategoryCB.SelectedValue.ToString()),
-                dataBaseModel.GetAllCategories("м", ageCategoryCB.SelectedValue.ToString()));
+                competitionVM.SetWeights(dataBaseModel.GetAllCategories("ж", ageCategoryCB.SelectedValue.ToString()),
+                    dataBaseModel.GetAllCategories("м", ageCategoryCB.SelectedValue.ToString()));
 
-            competitionVM.SetPoints(dataBaseModel.GetAllPoints(pointsCB.SelectedValue.ToString()),
-                ageCategoryCB.SelectedValue.ToString());
-            competitionVM.SetWeightsLimits(weightWomen.Text, weightMen.Text);
-
-
+                competitionVM.SetPoints(dataBaseModel.GetAllPoints(pointsCB.SelectedValue.ToString()),
+                    ageCategoryCB.SelectedValue.ToString());
+                competitionVM.SetWeightsLimits(weightWomen.Text, weightMen.Text);
+                MessageBox.Show("Параметры сохранены успешно!", "Уведомление");
+            }
         }
 
         

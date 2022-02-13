@@ -20,7 +20,9 @@
             <Setter Property="Background" Value="#FFEDB5C0"></Setter>
         </Style>
     </UserControl.Resources>
-    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding}" >
+    <DataGrid CanUserSortColumns="False" AutoGenerateColumns="False" ItemsSource="{Binding}" RowBackground="#c2c2c2" 
+                                          AlternatingRowBackground="White" 
+                                          Background="White" >
         <DataGrid.RowStyle>
             <Style TargetType="DataGridRow">
                 <Style.Triggers>

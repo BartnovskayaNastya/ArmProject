@@ -169,7 +169,7 @@
             <TabItem Header="Ведение соревнования">
                 <TabControl>
                     <TabItem Header="Параметры">
-                        <Grid>
+                        <Grid Margin="10 10 10 10">
                             <Grid.RowDefinitions>
                                 <RowDefinition />
                                 <RowDefinition/>
@@ -236,14 +236,21 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition/>
-                                <RowDefinition Height="52"/>
+                                <RowDefinition/>
+                                <RowDefinition Height="80"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <!--<ColumnDefinition/>-->
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Grid>
-                                <DataGrid Grid.Row="0" PreviewKeyDown="dg_KeyDown"  SelectedItem="{Binding SelectedMember}" CellEditEnding="cellEditEnding" Name="membersGrid" AutoGenerateColumns="False" ItemsSource="{Binding}" SelectionChanged="membersGrid_SelectionChanged">
+                            <Grid  Grid.RowSpan="2">
+                                <DataGrid PreviewKeyDown="dg_KeyDown"  SelectedItem="{Binding SelectedMember}" CellEditEnding="cellEditEnding" Name="membersGrid" AutoGenerateColumns="False" ItemsSource="{Binding}" SelectionChanged="membersGrid_SelectionChanged" 
+                                          
+                                          RowBackground="#c2c2c2" 
+                                          AlternatingRowBackground="#f5ebff" 
+                                          Background="White">
+
+                                   
                                     <DataGrid.Columns>
                                         <DataGridComboBoxColumn 
                                 Header = "Пол" 
@@ -259,7 +266,7 @@
                                 Header ="Имя" 
                                 Binding="{Binding Member.FullName}" />
                                         <DataGridComboBoxColumn 
-                                Header = "Название" 
+                                Header = "Команда" 
                                 x:Name="TeamComboBox"
                                  SelectedItemBinding="{Binding TeamName}"
                                 DisplayMemberPath="{Binding TeamName}"/>
@@ -271,7 +278,7 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
                                         <DataGridComboBoxColumn 
-                                Header = "Название" 
+                                Header = "Область" 
                                 x:Name="RegionComboBoxz"
                                 DisplayMemberPath="{Binding RegionName}"
                                  SelectedItemBinding="{Binding RegionName}"/>
@@ -295,7 +302,7 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-                                       
+
                                         <DataGridTextColumn Width="130" Header ="Тренер" Binding="{Binding TrainerName}"/>
                                         <DataGridComboBoxColumn 
                                 Header = "Рука" 
@@ -305,26 +312,22 @@
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Grid>
-                            <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center">
                                 <Button x:Name="saveAllMembers" Content="Сохранить данные" Width="180" Height="30" Margin="10" Click="saveAllMembers_Click"/>
                                 <Button x:Name="loadAllMembers" Content="Загрузить данные" Width="180" Height="30" Margin="10" Click="loadAllMembers_Click"/>
                             </StackPanel>
-                            <!--<Grid Grid.RowSpan="2" Grid.Column="1">
+                            <Grid Grid.RowSpan="2" Grid.Column="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="90" />
                                     <RowDefinition/>
-                                    <RowDefinition Height="50"/>
                                 </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                </Grid.ColumnDefinitions>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="Введите имя участника:" />
+                                <StackPanel Grid.Row="0"  Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Margin="0" Text="Введите имя участника:" />
                                     <TextBox x:Name="searchePanel" Height="30" Width="200"/>
                                     <Button x:Name="findInDBButton" Content="Найти" Width="100" Height="30" Margin="10" Click="findInDBButton_Click"/>
                                 </StackPanel>
                                 <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="VerticalOnly" SnapsToDevicePixels="True" PreviewMouseWheel="sv_PreviewMouseWheel">
-                                    <ListView Grid.Row="0"  Name="bdMembersList" ItemsSource="{Binding}">
+                                    <ListView Name="bdMembersList" ItemsSource="{Binding}">
                                         <ListView.ItemTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
@@ -341,92 +344,14 @@
                                         </ListView.ItemTemplate>
                                     </ListView>
                                 </ScrollViewer>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2">
-                                    <Button x:Name="addMemberButton" Content="Добавить" Width="100" Height="30" Margin="10" Click="addMemberButton_Click"/>
-                                    <Button x:Name="resetButton" Content="Сброс" Width="100" Height="30" Margin="10" Click="resetButton_Click"/>
-
-                                </StackPanel>
-                            </Grid>-->
+                            </Grid>
+                                
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1">
+                                <Button x:Name="addMemberButton" Content="Добавить" Width="100" Height="30" Margin="10" Click="addMemberButton_Click"/>
+                                <Button x:Name="resetButton" Content="Сброс" Width="100" Height="30" Margin="10" Click="resetButton_Click"/>
+                            </StackPanel>
                         </Grid>
                     </TabItem>
-                    <!--<TabItem Header="Информация">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="50"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <StackPanel Grid.Row="0" x:Name="stackPanel">
-                                <Button x:Name="startButton" Content="Информация об участниках" Click="Button_Click"  />
-                            </StackPanel>
-                            <TabControl Grid.Row="1">
-                                <TabItem Header="М">
-                                    <TabControl ItemsSource="{Binding}" x:Name="tabControlBoys" >
-                                        <TabControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Category.CategoryWeight}">
-                                                </Label>
-                                            </DataTemplate>
-                                        </TabControl.ItemTemplate>
-                                        <TabControl.ContentTemplate>
-                                            <DataTemplate>
-                                                <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="VerticalOnly" SnapsToDevicePixels="True" PreviewMouseWheel="sv_PreviewMouseWheel">
-                                                    <ListView ItemsSource="{Binding Members, UpdateSourceTrigger=PropertyChanged}">
-                                                        <ListView.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <StackPanel>
-                                                                    --><!--  добавить новые поля!--><!--
-                                                                    <TextBlock Text="{Binding Member.Weight}" />
-                                                                    <TextBlock Text="{Binding Member.Gender}" />
-                                                                    <TextBlock Text="{Binding Member.FullName}"/>
-                                                                    <TextBlock Text="{Binding  QualificationName}"  />
-                                                                    <TextBlock Text="{Binding Member.DateOfBirth}" />
-                                                                    <TextBlock Text="{Binding RegionName}" />
-                                                                    <TextBlock Text="{Binding TeamName}"  />
-                                                                    <TextBlock Text="{Binding TrainerName}" />
-                                                                </StackPanel>
-                                                            </DataTemplate>
-
-                                                        </ListView.ItemTemplate>
-                                                    </ListView>
-                                                </ScrollViewer>
-                                            </DataTemplate>
-                                        </TabControl.ContentTemplate>
-                                    </TabControl>
-                                </TabItem>
-                                <TabItem Header="Ж">
-                                    <TabControl  Name="tabControlGirls" >
-                                        <TabControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Label Content="{Binding Category.CategoryWeight}">
-                                                </Label>
-                                            </DataTemplate>
-                                        </TabControl.ItemTemplate>
-                                        <TabControl.ContentTemplate>
-                                            <DataTemplate>
-                                                <ListView ItemsSource="{Binding Members}">
-                                                    <ListView.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <StackPanel>
-                                                                <TextBlock Text="{Binding Member.Weight}" />
-                                                                <TextBlock Text="{Binding Member.Gender}" />
-                                                                <TextBlock Text="{Binding Member.FullName}"/>
-                                                                <TextBlock Text="{Binding QualificationName}"  />
-                                                                <TextBlock Text="{Binding Member.DateOfBirth}" />
-                                                                <TextBlock Text="{Binding RegionName}" />
-                                                                <TextBlock Text="{Binding TeamName}"  />
-                                                                <TextBlock Text="{Binding TrainerName}" />
-                                                            </StackPanel>
-                                                        </DataTemplate>
-
-                                                    </ListView.ItemTemplate>
-                                                </ListView>
-                                            </DataTemplate>
-                                        </TabControl.ContentTemplate>
-                                    </TabControl>
-                                </TabItem>
-                            </TabControl>
-                        </Grid>
-                    </TabItem>-->
                     <TabItem Header="Турнирные таблицы">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -454,10 +379,10 @@
                     <TabItem Header="Результаты двоеборья">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="90"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Button HorizontalAlignment="Left" Content="Посчитать очки" Click="getResultsButton_Click"></Button>
+                            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Content="Посчитать очки" Click="getResultsButton_Click"></Button>
                             <TabControl Grid.Row="1">
                                 <TabItem Header="Мужчины">
                                     <local1:ResultHandsTableTemplate x:Name="resultTableBoys" DataContext="{Binding}"></local1:ResultHandsTableTemplate>
@@ -472,11 +397,11 @@
                     <TabItem Header="СК+Область">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="90"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Button HorizontalAlignment="Center" Content="Посчитать очки" Click="getResultsProtocol_Click"></Button>
-                            <TabControl Grid.Row="1">
+                            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Content="Посчитать очки" Click="getResultsProtocol_Click"></Button>
+                            <TabControl Grid.Row="1" >
                                 <TabItem Header="Мужчины">
                                     <local1:SummaryProtocolTableTemplate x:Name="resultProtocolB" DataContext="{Binding}"></local1:SummaryProtocolTableTemplate>
                                 </TabItem>
@@ -490,7 +415,7 @@
                     <TabItem Header="Сводный Протокол">
                         <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="80"/>
                                 <RowDefinition Height="30"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
@@ -499,7 +424,7 @@
                                 <ColumnDefinition Width="20"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Button HorizontalAlignment="Center" Grid.ColumnSpan="3"  Grid.Column="0" Grid.Row="0" Content="Посчитать очки" Click="getTotalProtocolTeam_Click" Height="26" Margin="1,2,0,0" VerticalAlignment="Top"></Button>
+                            <Button HorizontalAlignment="Center" VerticalAlignment="Center" Grid.ColumnSpan="3"  Grid.Column="0" Grid.Row="0" Content="Посчитать очки" Click="getTotalProtocolTeam_Click" Height="26" ></Button>
                             <Label Background="#FF99CED2" HorizontalAlignment="Center" Content="Команда" Grid.Row="1" Grid.Column="0"></Label>
                             <Label Background="#FF9AA5C3" HorizontalAlignment="Center" Content="Регион" Grid.Row="1" Grid.Column="2"></Label>
                             <local1:SummaryProtocolSK Grid.Row="2" Grid.Column="0" x:Name="totalProtocolTeam" DataContext="{Binding}"></local1:SummaryProtocolSK>

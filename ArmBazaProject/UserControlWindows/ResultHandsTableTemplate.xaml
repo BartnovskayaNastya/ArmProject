@@ -22,7 +22,9 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding ResultMembers}" >
+                            <DataGrid RowBackground="#c2c2c2" 
+                                          AlternatingRowBackground="#c7ebdf" 
+                                          Background="White" AutoGenerateColumns="False" ItemsSource="{Binding ResultMembers}" >
                                 <DataGrid.Columns>
                                     <DataGridTextColumn  Header ="Имя" Binding="{Binding Member.FullName}" />
                                     <DataGridTextColumn  Header ="Команда" Binding="{Binding TeamName}" />
