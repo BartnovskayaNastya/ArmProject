@@ -37,7 +37,7 @@ namespace ArmBazaProject
         MemberViewModel someMember;
 
         private ObservableCollection<MemberViewModel> resultMembers;
-
+        private string membersCount = "";
         private ObservableCollection<MemberViewModel> allMembers;
         private ObservableCollection<MemberViewModel> placeMembers;
         private ObservableCollection<MemberViewModel> firstTourMembers;
@@ -78,7 +78,18 @@ namespace ArmBazaProject
                 }
             }
         }
-
+        public string MembersCount
+        {
+            get { return membersCount; }
+            set
+            {
+                if (membersCount != value)
+                {
+                    membersCount = value;
+                    OnPropertyChanged("MembersCount");
+                }
+            }
+        }
         public ObservableCollection<ProtocolResultModel> ResultTeams
         {
             get { return resultTeams; }

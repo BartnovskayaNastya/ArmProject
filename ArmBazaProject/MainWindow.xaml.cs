@@ -7,13 +7,17 @@ using ArmBazaProject.ViewModels;
 using System.Collections.ObjectModel;
 using ArmBazaProject.Models;
 using ArmBazaProject.Entities;
+using System;
+using Excel = Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Excel;
+using System.Collections.Generic;
 
 namespace ArmBazaProject
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : System.Windows.Window
     {
         ApplicationContext dataBase;
         DataBaseModel dataBaseModel;
@@ -364,13 +368,13 @@ namespace ArmBazaProject
         {       
             PrintDialog dlg = new PrintDialog();
 
-                Window currentMainWindow = Application.Current.MainWindow;
+            System.Windows.Window currentMainWindow = System.Windows.Application.Current.MainWindow;
 
-                Application.Current.MainWindow = this;
+            System.Windows.Application.Current.MainWindow = this;
 
                 if ((bool)dlg.ShowDialog().GetValueOrDefault())
                 {
-                    Application.Current.MainWindow = currentMainWindow; // do it early enough if the 'if' is entered
+                System.Windows.Application.Current.MainWindow = currentMainWindow; // do it early enough if the 'if' is entered
                     dlg.PrintTicket.PageOrientation = System.Printing.PageOrientation.Landscape;
                 }
         }
@@ -427,6 +431,59 @@ namespace ArmBazaProject
             totalProtocolTeam.DataContext = resultVM.ResultSummaryTeams;
             totalProtocolRegion.DataContext = resultVM.ResultSummaryRegions;
         }
+
+        private void exportResultsButton_Click(object sender, RoutedEventArgs e)
+        {
+            Excel.Application excel = new Excel.Application();
+            
+            Workbook workbook = excel.Workbooks.Add();
+            Worksheet manSheetLeftHand = (Worksheet)workbook.Sheets[1];
+            manSheetLeftHand.Name = "МужчиныЛевая";
+            Worksheet womanSheetLeftHand;
+            womanSheetLeftHand = (Worksheet)excel.Worksheets.Add();
+            womanSheetLeftHand.Name = "ЖенщиныЛевая";
+
+            string[] resultHandGridHeaders = new string[] { "Имя", "Команда", "Вес", "Место Левая", "Очки Левая", "Место Правая", "Очки Правая", "Место", };
+            List<List<string>> content = new List<List<string>>();
+
+            //назначение заголовий
+            for (int j = 0; j <  resultHandGridHeaders.Length; j++)
+            {
+                Range myRange = (Range)manSheetLeftHand.Cells[2, j + 1];
+                manSheetLeftHand.Cells[1, j + 1].Font.Bold = true;
+                manSheetLeftHand.Columns[j + 1].ColumnWidth = 15;
+                myRange.Value2 = resultHandGridHeaders[j];
+            }
+
+            //сбор контента в лист
+            for (int j = 0; j < resultVM.ResultCategoryBoys[0].ResultMembers.Count; j++)
+            {
+                content.Add(new List<string>() { resultVM.ResultCategoryBoys[0].ResultMembers[j].Member.FullName,
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].TeamName,
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].Member.Weight.ToString(),
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].LeftHandPlaceVM,
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].LeftHandScoreVM,
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].RightHandPlaceVM,
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].RightHandScoreVM,
+                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].ResultHandPlace.ToString()
+                });
+            }
+
+            //заполнение - мужчины левая рука
+            for (int i = 0; i < resultHandGridHeaders.Length; i++)
+            {
+                for (int j = 0; j < content.Count; j++)
+                {
+                    for (int k = 0; k < content[j].Count; k++)
+                    {
+                        Range myRange = (Range)manSheetLeftHand.Cells[j + 3, k + 1];
+                        myRange.Value2 = content[j][k];
+                    }
+                }
+            }
+            excel.Visible = true;
+        }
+
 
     }
 }

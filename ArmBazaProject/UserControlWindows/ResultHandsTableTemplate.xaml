@@ -22,7 +22,7 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <DataGrid RowBackground="#c2c2c2" 
+                            <DataGrid Name="resultsGrid" RowBackground="#c2c2c2" 
                                           AlternatingRowBackground="#c7ebdf" 
                                           Background="White" AutoGenerateColumns="False" ItemsSource="{Binding ResultMembers}" >
                                 <DataGrid.Columns>
@@ -37,13 +37,14 @@
                                     <DataGridTextColumn  Header ="Место" Binding="{Binding ResultHandPlace}" />
                                 </DataGrid.Columns>
                             </DataGrid>
-                            <DataGrid Grid.Column ="1" AutoGenerateColumns="False" ItemsSource="{Binding Teams}">
+                            
+                            <!--<DataGrid Grid.Column ="1" AutoGenerateColumns="False" ItemsSource="{Binding Teams}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn  Header ="Команда" Binding="{Binding Name}" />
                                     <DataGridTextColumn  Header ="Место" Binding="{Binding Place}" />
                                     <DataGridTextColumn  Header ="Очки" Binding="{Binding Score}" />
                                 </DataGrid.Columns>
-                            </DataGrid>
+                            </DataGrid>-->
                         </Grid>
                     </ScrollViewer>
                 </DataTemplate>

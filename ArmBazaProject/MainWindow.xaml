@@ -355,10 +355,10 @@
                     <TabItem Header="Турнирные таблицы">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="80"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
-                            <Button HorizontalAlignment="Left" Content="Обновить данные" Click="Button_Click_1" Height="26" Margin="1,0,0,2" VerticalAlignment="Bottom"></Button>
+                            <Button HorizontalAlignment="Center" Content="Начать" Click="Button_Click_1" Height="26" Margin="10,0,0,25" VerticalAlignment="Bottom"></Button>
                             <TabControl Grid.Row="1">
                                 <TabItem Header="Мужчины-Левая">
                                     <local:TabItemTemplate x:Name="TabBoysLeftHand" DataContext="{Binding}"></local:TabItemTemplate>
@@ -383,6 +383,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Button HorizontalAlignment="Center" VerticalAlignment="Center" Content="Посчитать очки" Click="getResultsButton_Click"></Button>
+                            <Button VerticalAlignment="Center" HorizontalAlignment="Right" Content="Экспорт в Excel" Click="exportResultsButton_Click"></Button>
                             <TabControl Grid.Row="1">
                                 <TabItem Header="Мужчины">
                                     <local1:ResultHandsTableTemplate x:Name="resultTableBoys" DataContext="{Binding}"></local1:ResultHandsTableTemplate>

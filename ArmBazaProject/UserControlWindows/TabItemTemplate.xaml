@@ -24,110 +24,100 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <ScrollViewer x:Name="svT" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" CanContentScroll="False" PanningMode="VerticalOnly" SnapsToDevicePixels="True" PreviewMouseWheel="svT_PreviewMouseWheel">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition />
-                                <ColumnDefinition Width="250"/>
-                                <ColumnDefinition Width="250"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Orientation="Horizontal" Grid.Column="0">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="50"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" CanContentScroll="False"  SnapsToDevicePixels="True" PreviewMouseWheel="svT_PreviewMouseWheel">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="250"/>
+                            <ColumnDefinition Width="250"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Column="0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition />
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition Height="50"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock HorizontalAlignment="Center" Text="{Binding MembersCount}"/>
+                                <DataGrid Grid.Row="1"  AutoGenerateColumns="False" ItemsSource="{Binding AllMembers}">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn  Header ="Имя" Binding="{Binding Member.FullName}" />
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                                <Button Grid.Column="0" Grid.Row="2"  Content="Начать" Command="{Binding StartToureCommand}"/>
+                                <Button Grid.Column="0" Grid.Row="3"  Content="Жеребьёвка" Command="{Binding DrawCommand}"/>
 
-                                    <ScrollViewer Grid.Column="0" Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" CanContentScroll="True" PanningMode="VerticalOnly" SnapsToDevicePixels="True" PreviewMouseWheel="svT_PreviewMouseWheel">
-                                        <DataGrid  AutoGenerateColumns="False" ItemsSource="{Binding AllMembers}">
-                                            <DataGrid.Columns>
-                                                <DataGridTextColumn  Header ="Имя" Binding="{Binding Member.FullName}" />
-                                            </DataGrid.Columns>
-                                        </DataGrid>
-                                    </ScrollViewer>
-                                    <Button Grid.Column="0" Grid.Row="1"  Content="Начать" Command="{Binding StartToureCommand}"/>
-                                    <Button Grid.Column="0" Grid.Row="2"  Content="Жеребьёвка" Command="{Binding DrawCommand}"/>
+                                <StackPanel  Grid.Column="1" Grid.RowSpan="3">
+                                    <local:DataGridToure  DataContext="{Binding FirstToureMembers}"></local:DataGridToure>
+                                    <Button Content="2 тур" Command="{Binding FirstToureCommand}"/>
+                                </StackPanel>
+                            </Grid>
+                                
+                                <Grid>
+                                
 
-                                    <StackPanel  Grid.Column="1" Grid.RowSpan="3">
-                                        <local:DataGridToure  DataContext="{Binding FirstToureMembers}"></local:DataGridToure>
-                                        <Button Content="2 тур" Command="{Binding FirstToureCommand}"/>
-                                    </StackPanel>
-                                </Grid>
-                                <Grid>
-                                    <ScrollViewer HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Auto" CanContentScroll="False"  SnapsToDevicePixels="True" PreviewMouseWheel="svT_PreviewMouseWheel">
-                                        <ItemsControl ItemsSource="{Binding Toures}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid>
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="35"/>
-                                                            <RowDefinition />
-                                                            <RowDefinition Height="35"/>
-                                                            <RowDefinition />
-                                                            <RowDefinition Height="50"/>
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition/>
-                                                        </Grid.ColumnDefinitions>
-                                                        <TextBlock Margin="3" HorizontalAlignment="Center" Text="Группа А"></TextBlock>
-                                                        <local:DataGridToure Grid.Row="1" DataContext="{Binding Toure.ToureMembersA}"></local:DataGridToure>
-                                                        <TextBlock Margin="3" HorizontalAlignment="Center" Grid.Row="2" Text="Группа Б"></TextBlock>
-                                                        <local:DataGridToure Grid.Row="3" DataContext="{Binding Toure.ToureMembersB}"></local:DataGridToure>
-                                                        <Button Content="ТУР" Grid.Row="4" Command="{Binding ToureCommand}"/>
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </ScrollViewer>
-                                </Grid>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <Button  Content="Полуфинал" Command="{Binding SemiFinalCommand}"/>
-                                <TextBlock Margin="3" HorizontalAlignment="Center"  Text="Полуфинал"></TextBlock>
-                                <local:DataGridToure DataContext="{Binding SemiFinal}"></local:DataGridToure>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2">
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                        <RowDefinition/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                </Grid>
-                                <TextBlock Margin="3" HorizontalAlignment="Center"  Text="Финал"></TextBlock>
-                                <Button Grid.Row="1" Content="1 Поединок" Command="{Binding FinalCommandA}"/>
-                                <local:DataGridToure Grid.Row="2" DataContext="{Binding Final.Toure.ToureMembersA}"></local:DataGridToure>
-                                <Button Grid.Row="3" Content="2 Поединок" Command="{Binding FinalCommandB}"/>
-                                <local:DataGridToure Grid.Row="4" DataContext="{Binding Final.Toure.ToureMembersB}"></local:DataGridToure>
-                                <Grid Grid.RowSpan="5" >
-                                    <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding PlaceMembers}" >
-                                        <DataGrid.Columns>
-                                            <DataGridTextColumn  Header ="Имя" Binding="{Binding Member.FullName}" />
-                                            <DataGridTextColumn  Header ="Место" Binding="{Binding Place}" />
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </Grid>
-                            </StackPanel>
-                        </Grid>
+                                    <ItemsControl ItemsSource="{Binding Toures}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal" IsItemsHost="True"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="35"/>
+                                                        <RowDefinition />
+                                                        <RowDefinition Height="35"/>
+                                                        <RowDefinition />
+                                                        <RowDefinition Height="50"/>
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Margin="3" HorizontalAlignment="Center" Text="Группа А"></TextBlock>
+                                                    <local:DataGridToure Grid.Row="1" DataContext="{Binding Toure.ToureMembersA}"></local:DataGridToure>
+                                                    <TextBlock Margin="3" HorizontalAlignment="Center" Grid.Row="2" Text="Группа Б"></TextBlock>
+                                                    <local:DataGridToure Grid.Row="3" DataContext="{Binding Toure.ToureMembersB}"></local:DataGridToure>
+                                                    <Button Content="ТУР" Grid.Row="4" Command="{Binding ToureCommand}"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                            
+                    </Grid>
+                                
+                            
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+
+                            <TextBlock Margin="3" HorizontalAlignment="Center"  Text="Полуфинал"/>
+                            <local:DataGridToure DataContext="{Binding SemiFinal}"></local:DataGridToure>
+                            <Button Margin="5"  Content="Полуфинал" Command="{Binding SemiFinalCommand}"/>
+                            <TextBlock Margin="3" HorizontalAlignment="Center"  Text="Финал"></TextBlock>
+                            <local:DataGridToure Grid.Row="2" DataContext="{Binding Final.Toure.ToureMembersA}"></local:DataGridToure>
+                            <Button Margin="5" Grid.Row="1" Content="1 Поединок" Command="{Binding FinalCommandA}"/>
+                            <local:DataGridToure Grid.Row="4" DataContext="{Binding Final.Toure.ToureMembersB}"></local:DataGridToure>
+                            <Button Margin="5" Grid.Row="3" Content="2 Поединок" Command="{Binding FinalCommandB}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Margin="3" HorizontalAlignment="Center"  Text="Результаты"/>
+                            <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding PlaceMembers}" >
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn  Header ="Имя" Binding="{Binding Member.FullName}" />
+                                    <DataGridTextColumn  Header ="Место" Binding="{Binding Place}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                    </Grid>
                     </ScrollViewer>
                 </DataTemplate>
             </TabControl.ContentTemplate>

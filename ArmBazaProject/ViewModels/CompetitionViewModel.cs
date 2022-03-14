@@ -164,6 +164,7 @@ namespace ArmBazaProject.ViewModels
                 if (members.Count > 0)
                 {
                     categories[i].WeightCategory.CategoryGender = members[0].Member.Gender;
+                    
                 }
 
             }
@@ -218,6 +219,7 @@ namespace ArmBazaProject.ViewModels
             {
                 categories[i].Teams = new ObservableCollection<Entities.ProtocolResultModel>();
                 categories[i].SetTeams();
+                categories[i].MembersCount = categories[i].AllMembers.Count + " участников";
             }
         }
 
