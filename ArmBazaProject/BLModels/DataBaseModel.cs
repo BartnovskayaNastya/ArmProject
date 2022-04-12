@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ArmBazaProject
 {
-    class DataBaseModel
+    public class DataBaseModel
     {
         public DataBaseModel()
         {

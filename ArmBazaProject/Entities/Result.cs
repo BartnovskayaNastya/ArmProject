@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ArmBazaProject.Entities
 {
-    class Result : NotifyableObject
+    public class Result : NotifyableObject
     {
         private ObservableCollection<MemberViewModel> allMembers;
         private ObservableCollection<MemberViewModel> placeMembersLeft;

@@ -90,6 +90,7 @@
     <Compile Include="Entities\Serializator.cs" />
     <Compile Include="Entities\ProtocolResultModel.cs" />
     <Compile Include="Entities\Toure.cs" />
+    <Compile Include="ExcelEntities\ExcelHandler.cs" />
     <Compile Include="UserControlWindows\DataGridCategory.xaml.cs">
       <DependentUpon>DataGridCategory.xaml</DependentUpon>
     </Compile>

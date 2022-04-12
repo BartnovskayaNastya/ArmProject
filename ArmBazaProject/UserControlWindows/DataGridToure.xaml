@@ -37,7 +37,7 @@
         </DataGrid.RowStyle>
         <DataGrid.Columns>
             <DataGridTextColumn  Header ="Имя" Binding="{Binding Member.FullName}" />
-            <DataGridTemplateColumn Header="Победитель" >
+            <DataGridTemplateColumn Header="W" >
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <CheckBox IsChecked="{Binding IsWiner, UpdateSourceTrigger=PropertyChanged}" />

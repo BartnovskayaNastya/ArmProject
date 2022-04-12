@@ -9,7 +9,7 @@ using ArmBazaProject.Models;
 
 namespace ArmBazaProject.ViewModels
 {
-    class CompetitionViewModel : ViewModelBase
+    public class CompetitionViewModel : ViewModelBase
     {
         readonly Random random = new Random(Guid.NewGuid().GetHashCode());
 
@@ -21,6 +21,8 @@ namespace ArmBazaProject.ViewModels
 
         public double manLimit;
         public double womanLimit;
+
+        public bool isCompetitionParametersSet = false;
 
 
 
@@ -212,6 +214,27 @@ namespace ArmBazaProject.ViewModels
 
 
         #endregion
+
+        public void RandomDrawForAll()
+        {
+            Random rng = new Random();
+            foreach (CategoryViewModel categoryViewModel in CompetitionLeftHand.CategoriesB)
+            {
+                categoryViewModel.RandomDraw(rng);
+            }
+            foreach (CategoryViewModel categoryViewModel in CompetitionLeftHand.CategoriesG)
+            {
+                categoryViewModel.RandomDraw(rng);
+            }
+            foreach (CategoryViewModel categoryViewModel in CompetitionRightHand.CategoriesB)
+            {
+                categoryViewModel.RandomDraw(rng);
+            }
+            foreach (CategoryViewModel categoryViewModel in CompetitionRightHand.CategoriesG)
+            {
+                categoryViewModel.RandomDraw(rng);
+            }
+        }
 
         private void SortTeams(CategoryViewModel[] categories)
         {

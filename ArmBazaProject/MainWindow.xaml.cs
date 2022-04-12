@@ -4,26 +4,21 @@ using System.Windows.Controls;
 using ArmBazaProject.windows;
 using System.Windows.Input;
 using ArmBazaProject.ViewModels;
-using System.Collections.ObjectModel;
-using ArmBazaProject.Models;
 using ArmBazaProject.Entities;
-using System;
-using Excel = Microsoft.Office.Interop.Excel;
-using Microsoft.Office.Interop.Excel;
-using System.Collections.Generic;
+using ArmBazaProject.ExcelEntities;
 
 namespace ArmBazaProject
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : System.Windows.Window
+    public partial class MainWindow : Window
     {
         ApplicationContext dataBase;
         DataBaseModel dataBaseModel;
         CompetitionViewModel competitionVM;
         ResultViewModel resultVM;
-
+        bool isCompetitionStarted = false;
         Serializator serializator;
         
 
@@ -246,21 +241,6 @@ namespace ArmBazaProject
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //competitionVM.SortAllMembers();
-            ////информация
-            //tabControlBoys.ItemsSource = null;
-            //tabControlGirls.ItemsSource = null;
-            
-            //tabControlBoys.ItemsSource = competitionVM.Competition.CategoriesB;
-            //tabControlGirls.ItemsSource = competitionVM.Competition.CategoriesG;
-
-        }
-
-        private void toure1_Button_Click(object sender, RoutedEventArgs e)
-        {
-        }
 
         private void cellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
         {
@@ -307,22 +287,32 @@ namespace ArmBazaProject
         //ТУРНИРНЫЕ ТАБЛИЦЫ
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            competitionVM.SortAllMembers(dataBaseModel.GetAllCategories("ж", competitionVM.CompetitionLeftHand.CategoryName),
+            if (!isCompetitionStarted)
+            {
+                competitionVM.SortAllMembers(dataBaseModel.GetAllCategories("ж", competitionVM.CompetitionLeftHand.CategoryName),
                 dataBaseModel.GetAllCategories("м", competitionVM.CompetitionLeftHand.CategoryName));
 
-            //исправить добавление без проблем!
-           /* TabBoysLeftHand.DataContext = null;
-            TabBoysRighHand.DataContext = null;
-            TabGirlsLeftHand.DataContext = null;
-            TabGirlsRighHand.DataContext = null;*/
+                //жеребьевка всех категорий
+                competitionVM.RandomDrawForAll();
 
-            //турнирные
-            TabBoysLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesB;
-            TabBoysRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesB;
-            TabGirlsLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesG;
-            TabGirlsRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesG;
+                //исправить добавление без проблем!
+                /* TabBoysLeftHand.DataContext = null;
+                 TabBoysRighHand.DataContext = null;
+                 TabGirlsLeftHand.DataContext = null;
+                 TabGirlsRighHand.DataContext = null;*/
 
-            //ComandScore.DataContext = competitionVM.
+                //турнирные
+                TabBoysLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesB;
+                TabBoysRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesB;
+                TabGirlsLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesG;
+                TabGirlsRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesG;
+
+                //ComandScore.DataContext = competitionVM.
+
+                MessageBox.Show("Турнирные таблицы успешно созданы. Жеребьевка была проведена для каждой категории автоматически", "Уведомление");
+                isCompetitionStarted = true;
+            }
+
 
         }
 
@@ -358,6 +348,7 @@ namespace ArmBazaProject
                 competitionVM.SetPoints(dataBaseModel.GetAllPoints(pointsCB.SelectedValue.ToString()),
                     ageCategoryCB.SelectedValue.ToString());
                 competitionVM.SetWeightsLimits(weightWomen.Text, weightMen.Text);
+                competitionVM.isCompetitionParametersSet = true;
                 MessageBox.Show("Параметры сохранены успешно!", "Уведомление");
             }
         }
@@ -408,21 +399,38 @@ namespace ArmBazaProject
 
         private void getResultsProtocol_Click(object sender, RoutedEventArgs e)
         {
-            resultVM.GetProtocolTeamResults();
+            if(resultVM == null)
+            {
+                MessageBox.Show("Пожалуйста вернитесь во вкладку РЕЗУЛЬТАТЫ ДВОЕБОРЬЯ и нажмите кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
+            }
+            else
+            {
+                resultVM.GetProtocolTeamResults();
 
-            resultProtocolB.DataContext = resultVM.ResultTeamCategoryBoys;
-            resultProtocolG.DataContext = resultVM.ResultTeamCategoryGirls;
+                resultProtocolB.DataContext = resultVM.ResultTeamCategoryBoys;
+                resultProtocolG.DataContext = resultVM.ResultTeamCategoryGirls;
+            }
+           
         }
 
         private void saveAllMembers_Click(object sender, RoutedEventArgs e)
         {
             serializator.SaveData(competitionVM.AllMembers);
+            MessageBox.Show("Ваши данные успешно сохранены", "Уведомление");
         }
 
         private void loadAllMembers_Click(object sender, RoutedEventArgs e)
         {
-            competitionVM.AllMembers = serializator.OpenData();
-            membersGrid.ItemsSource = competitionVM.AllMembers;
+            if(!competitionVM.isCompetitionParametersSet)
+            {
+                MessageBox.Show("Пожалуйста выберите параметры соревнования перед загрузкой данных", "Уведомление");
+            }
+            else
+            {
+                competitionVM.AllMembers = serializator.OpenData();
+                membersGrid.ItemsSource = competitionVM.AllMembers;
+            }
+            
         }
 
         private void getTotalProtocolTeam_Click(object sender, RoutedEventArgs e)
@@ -434,56 +442,26 @@ namespace ArmBazaProject
 
         private void exportResultsButton_Click(object sender, RoutedEventArgs e)
         {
-            Excel.Application excel = new Excel.Application();
+            if(resultVM == null)
+            {
+                MessageBox.Show("Сначала необходимо посчитать данные. Нажмите на кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
+            }
+            else
+            {
+                ExcelHandler excelHandler = new ExcelHandler(competitionVM);
+                excelHandler.SetApplicationParametersForTwoHandsRelults();
+                excelHandler.result = resultVM;
+                excelHandler.SaveAllTwoHandsRelultsData();
+            }
             
-            Workbook workbook = excel.Workbooks.Add();
-            Worksheet manSheetLeftHand = (Worksheet)workbook.Sheets[1];
-            manSheetLeftHand.Name = "МужчиныЛевая";
-            Worksheet womanSheetLeftHand;
-            womanSheetLeftHand = (Worksheet)excel.Worksheets.Add();
-            womanSheetLeftHand.Name = "ЖенщиныЛевая";
 
-            string[] resultHandGridHeaders = new string[] { "Имя", "Команда", "Вес", "Место Левая", "Очки Левая", "Место Правая", "Очки Правая", "Место", };
-            List<List<string>> content = new List<List<string>>();
-
-            //назначение заголовий
-            for (int j = 0; j <  resultHandGridHeaders.Length; j++)
-            {
-                Range myRange = (Range)manSheetLeftHand.Cells[2, j + 1];
-                manSheetLeftHand.Cells[1, j + 1].Font.Bold = true;
-                manSheetLeftHand.Columns[j + 1].ColumnWidth = 15;
-                myRange.Value2 = resultHandGridHeaders[j];
-            }
-
-            //сбор контента в лист
-            for (int j = 0; j < resultVM.ResultCategoryBoys[0].ResultMembers.Count; j++)
-            {
-                content.Add(new List<string>() { resultVM.ResultCategoryBoys[0].ResultMembers[j].Member.FullName,
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].TeamName,
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].Member.Weight.ToString(),
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].LeftHandPlaceVM,
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].LeftHandScoreVM,
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].RightHandPlaceVM,
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].RightHandScoreVM,
-                                                 resultVM.ResultCategoryBoys[0].ResultMembers[j].ResultHandPlace.ToString()
-                });
-            }
-
-            //заполнение - мужчины левая рука
-            for (int i = 0; i < resultHandGridHeaders.Length; i++)
-            {
-                for (int j = 0; j < content.Count; j++)
-                {
-                    for (int k = 0; k < content[j].Count; k++)
-                    {
-                        Range myRange = (Range)manSheetLeftHand.Cells[j + 3, k + 1];
-                        myRange.Value2 = content[j][k];
-                    }
-                }
-            }
-            excel.Visible = true;
         }
 
-
+        private void Save_Draw_Button_Click(object sender, RoutedEventArgs e)
+        {
+            ExcelHandler excelHandler = new ExcelHandler(competitionVM);
+            excelHandler.SetApplicationParametersForDraw();
+            excelHandler.SaveAllDrawData();
+        }
     }
 }

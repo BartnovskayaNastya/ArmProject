@@ -9,7 +9,7 @@ using ArmBazaProject.Models;
 
 namespace ArmBazaProject.ViewModels
 {
-    class ResultViewModel : NotifyableObject
+    public class ResultViewModel : NotifyableObject
     {
         Result result;
         CompetitionViewModel competition;

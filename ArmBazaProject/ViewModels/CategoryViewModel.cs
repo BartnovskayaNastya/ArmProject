@@ -23,7 +23,6 @@ namespace ArmBazaProject
         bool isDone = false;
         bool isDonisimo = false;
 
-
         private WeightCategory weightCategory;
 
         private ObservableCollection<ToureViewModel> toures;
@@ -280,6 +279,20 @@ namespace ArmBazaProject
             }
         }
 
+        public void RandomDraw(Random rng)
+        {
+
+            int n = allMembers.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                MemberViewModel value = allMembers[k];
+                allMembers[k] = allMembers[n];
+                allMembers[n] = value;
+            }
+        }
+
         public bool CheckRegion(ProtocolResultModel regionToAdd)
         {
             bool isExist = false;
@@ -413,16 +426,20 @@ namespace ArmBazaProject
             else
             {
                 toure.SortFirstToure();
-                if (toures[toures.Count - 1].Toure.CheckExtraA() || toures[toures.Count - 1].Toure.CheckExtraB())
+                if(toures.Count >= 1)
                 {
-                    reserveToureToAdd = new ToureViewModel();
-                    reserveToureToAdd.buttonPressedEvent += ButtonClickToure;
-                    ExtraToure(toures[toures.Count - 1], reserveToureToAdd);
-                    toures[toures.Count - 1].ifExtra = true;
-                    index = toures.Count - 1;
-                    toures.Add(reserveToureToAdd);
-                    reserveToureToAdd.Name = toures.Count.ToString();
+                    if (toures[toures.Count - 1].Toure.CheckExtraA() || toures[toures.Count - 1].Toure.CheckExtraB())
+                    {
+                        reserveToureToAdd = new ToureViewModel();
+                        reserveToureToAdd.buttonPressedEvent += ButtonClickToure;
+                        ExtraToure(toures[toures.Count - 1], reserveToureToAdd);
+                        toures[toures.Count - 1].ifExtra = true;
+                        index = toures.Count - 1;
+                        toures.Add(reserveToureToAdd);
+                        reserveToureToAdd.Name = toures.Count.ToString();
+                    }
                 }
+                
             }
 
 
@@ -556,6 +573,7 @@ namespace ArmBazaProject
 
         private void ButtonClickToure(ToureViewModel toure)
         {
+            bool isToureBDone = true;
             int ind = 0;
             
             //3 участника
@@ -760,8 +778,14 @@ namespace ArmBazaProject
                 }
                 if (toures.Count != 1)
                 {
-
-                    if (((toures[toures.Count - 2].Toure.ToureMembersA.Count == 2 && toures[toures.Count - 1].Toure.ToureMembersA.Count == 0) || (toures[toures.Count - 1].Toure.ToureMembersA.Count == 2)) && (!isAall))
+                    if (((toures[toures.Count - 1].Toure.ToureMembersA.Count == 2 || toures[toures.Count - 2].Toure.ToureMembersA.Count == 2)&& (toures[toures.Count - 1].Toure.ToureMembersA.Count != 1))&&
+                        ((toures[toures.Count - 1].Toure.ToureMembersB.Count == 1 && toures[toures.Count - 2].Toure.ToureMembersB.Count == 2) ||
+                        (toures[toures.Count - 1].Toure.ToureMembersB.Count > 2)
+                        ))
+                    {
+                        isToureBDone = false;
+                    }
+                    else if (((toures[toures.Count - 2].Toure.ToureMembersA.Count == 2 && toures[toures.Count - 1].Toure.ToureMembersA.Count == 0) || (toures[toures.Count - 1].Toure.ToureMembersA.Count == 2)) && (!isAall))
                     {
                         if (toures[toures.Count - 1].Toure.ToureMembersA.Count == 0)
                         {
@@ -828,7 +852,7 @@ namespace ArmBazaProject
                     else if (toures[index].ifExtra)
                     {
                         toures[index].ifExtra = false;
-                        SortToures(toures[toures.Count - 1], toures[index], isAall, isBall);
+                        SortToures(toures[toures.Count - 1], toures[index], isAall, isBall, isToureBDone);
                         if (toures[toures.Count - 1].Toure.CheckExtraA() || toures[toures.Count - 1].Toure.CheckExtraB())
                         {
                             reserveToureToAdd = new ToureViewModel();
@@ -844,7 +868,7 @@ namespace ArmBazaProject
                     {
                         toureToAdd = new ToureViewModel();
                         toureToAdd.buttonPressedEvent += ButtonClickToure;
-                        SortToures(toureToAdd, toure, isAall, isBall);
+                        SortToures(toureToAdd, toure, isAall, isBall, isToureBDone);
                         if (toureToAdd.Toure.CheckExtraA() || toureToAdd.Toure.CheckExtraB())
                         {
                             reserveToureToAdd = new ToureViewModel();
@@ -869,7 +893,7 @@ namespace ArmBazaProject
                 else if (toures[index].ifExtra)
                 {
                     toures[index].ifExtra = false;
-                    SortToures(toures[toures.Count - 1], toures[index], isAall, isBall);
+                    SortToures(toures[toures.Count - 1], toures[index], isAall, isBall, isToureBDone);
                     if (toures[toures.Count - 1].Toure.CheckExtraA() || toures[toures.Count - 1].Toure.CheckExtraB())
                     {
                         reserveToureToAdd = new ToureViewModel();
@@ -885,7 +909,7 @@ namespace ArmBazaProject
                 {
                     toureToAdd = new ToureViewModel();
                     toureToAdd.buttonPressedEvent += ButtonClickToure;
-                    SortToures(toureToAdd, toure, isAall, isBall);
+                    SortToures(toureToAdd, toure, isAall, isBall, isToureBDone);
                     if (toureToAdd.Toure.CheckExtraA() || toureToAdd.Toure.CheckExtraB())
                     {
                         reserveToureToAdd = new ToureViewModel();
@@ -935,21 +959,26 @@ namespace ArmBazaProject
             }
         }
         //сортировка A тура
-        private void SortAToure(ToureViewModel toureToAdd, ToureViewModel toure, bool isAall)
+        private void SortAToure(ToureViewModel toureToAdd, ToureViewModel toure, bool isAall, bool isToureBDone)
         {
             foreach (MemberViewModel member in toure.Toure.ToureMembersA)
             {
                 someMember = new MemberViewModel();
                 someMember = (MemberViewModel)member.Clone();
-                if (someMember.IsWiner && !isAall)
+                if (someMember.IsWiner && !isAall && isToureBDone)
                 {
                     someMember.IsWiner = false;
                     toureToAdd.Toure.ToureMembersA.Add(someMember);
                 }
-                else if(!someMember.IsWiner && !isAall)
+                else if(!someMember.IsWiner && !isAall && isToureBDone)
                 {
                     someMember.LoseCounter++;
                     toureToAdd.Toure.ToureMembersB.Add(someMember);
+                }
+                else if (!isToureBDone)
+                {
+                    someMember.IsWiner = false;
+                    toureToAdd.Toure.ToureMembersA.Add(someMember);
                 }
             }
         }
@@ -975,9 +1004,9 @@ namespace ArmBazaProject
             }
         }
 
-        private void SortToures(ToureViewModel toureToAdd, ToureViewModel toure, bool isAall, bool isBall)
+        private void SortToures(ToureViewModel toureToAdd, ToureViewModel toure, bool isAall, bool isBall, bool isToureBDobe)
         {
-            SortAToure(toureToAdd, toure, isAall);
+            SortAToure(toureToAdd, toure, isAall, isToureBDobe);
             SortBToure(toureToAdd, toure, isBall);
         }
 

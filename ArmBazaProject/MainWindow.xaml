@@ -359,6 +359,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Button HorizontalAlignment="Center" Content="Начать" Click="Button_Click_1" Height="26" Margin="10,0,0,25" VerticalAlignment="Bottom"></Button>
+                            <Button HorizontalAlignment="Right" Content="Сохранить жеребьевку" Click="Save_Draw_Button_Click" Height="26" Margin="300,0,0,25" VerticalAlignment="Bottom"></Button>
                             <TabControl Grid.Row="1">
                                 <TabItem Header="Мужчины-Левая">
                                     <local:TabItemTemplate x:Name="TabBoysLeftHand" DataContext="{Binding}"></local:TabItemTemplate>
