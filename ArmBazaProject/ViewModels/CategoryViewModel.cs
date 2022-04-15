@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using ArmBazaProject.Entities;
 using ArmBazaProject.Models;
 using ArmBazaProject.ViewModels;
+using System.Windows.Input;
 
 namespace ArmBazaProject
 {
@@ -55,14 +56,16 @@ namespace ArmBazaProject
 
         #region свойства доступа
 
-        public IDelegateCommand StartToureCommand { protected set; get; }
-        public IDelegateCommand FirstToureCommand { protected set; get; }
+        public DelegateCommand FirstToureVisability {set; get; }
 
-        public IDelegateCommand DrawCommand { protected set; get; }
+        public DelegateCommand StartToureCommand { set; get; }
+        public DelegateCommand FirstToureCommand {set; get; }
 
-        public IDelegateCommand FinalCommandA { protected set; get; }
-        public IDelegateCommand FinalCommandB { protected set; get; }
-        public IDelegateCommand SemiFinalCommand { protected set; get; }
+        public DelegateCommand DrawCommand { set; get; }
+
+        public DelegateCommand FinalCommandA { set; get; }
+        public DelegateCommand FinalCommandB {  set; get; }
+        public DelegateCommand SemiFinalCommand { set; get; }
 
 
         public WeightCategory WeightCategory
@@ -241,16 +244,19 @@ namespace ArmBazaProject
 
             StartToureCommand = new DelegateCommand(StartCommand);
             FirstToureCommand = new DelegateCommand(FirstCommand);
+            FirstToureCommand.isVisible = false;
             DrawCommand = new DelegateCommand(RandomDraw);
             FinalCommandA = new DelegateCommand(FinalButtonA);
+            FinalCommandA.isVisible = false;
             FinalCommandB = new DelegateCommand(FinalButtonB);
+            FinalCommandB.isVisible = false;
             SemiFinalCommand = new DelegateCommand(SemiFinalButton);
+            SemiFinalCommand.isVisible = false;
 
             toure = new ToureViewModel();
             toure.buttonPressedEvent += ButtonClickToure;
-            
-        }
 
+        }
 
         public void SetTeams()
         {
@@ -355,6 +361,12 @@ namespace ArmBazaProject
                 allMembers[0].Place = 1;
                 placeMembers.Add((MemberViewModel)allMembers[0].Clone());
             }
+            else if (allMembers.Count == 2)
+            {
+                semifinal.Add((MemberViewModel)allMembers[0].Clone());
+                semifinal.Add((MemberViewModel)allMembers[1].Clone());
+                SemiFinalCommand.isVisible = true;
+            }
             else
             {
                 int size;
@@ -383,12 +395,18 @@ namespace ArmBazaProject
                     firstTourMembers.RemoveAt(firstTourMembers.Count - 1);
                 }
                 toures.Add(toure);
-                toure.Name = (toures.Count + 1).ToString();
+                
             }
-
+            StartToureCommand.isVisible = false;
+            if(allMembers.Count > 2)
+            {
+                FirstToureCommand.isVisible = true;
+            }
+            
         }
         private void FirstCommand(object param)
         {
+            
             someMember = new MemberViewModel();
             toure.Toure.ToureMembers.Clear();
             foreach (MemberViewModel member in firstTourMembers)
@@ -399,6 +417,7 @@ namespace ArmBazaProject
             if (firstTourMembers.Count == 2 && toures[0].Toure.ToureMembersA.Count == 1)
             {
                 getThreeMembers();
+                toures[0].IsVisible = true;
             }
             // 2 участника
             else if (firstTourMembers.Count == 2)
@@ -421,13 +440,15 @@ namespace ArmBazaProject
                     someMember.LoseCounter++;
                     final.Toure.ToureMembersA.Add(someMember);
                 }
+                FinalCommandA.isVisible = true;
             }
             //3+ участника
             else
             {
                 toure.SortFirstToure();
-                if(toures.Count >= 1)
+                if (toures.Count >= 1)
                 {
+                    
                     if (toures[toures.Count - 1].Toure.CheckExtraA() || toures[toures.Count - 1].Toure.CheckExtraB())
                     {
                         reserveToureToAdd = new ToureViewModel();
@@ -436,20 +457,20 @@ namespace ArmBazaProject
                         toures[toures.Count - 1].ifExtra = true;
                         index = toures.Count - 1;
                         toures.Add(reserveToureToAdd);
-                        reserveToureToAdd.Name = toures.Count.ToString();
                     }
                 }
-                
+                toures[0].IsVisible = true;
+
             }
-
-
+            FirstToureCommand.isVisible = false;
+            
         }
 
         private void FinalButtonA(object param)
         {
             someMemberFirst = (MemberViewModel)final.Toure.ToureMembersA[0].Clone();
             someMemberSecond = (MemberViewModel)final.Toure.ToureMembersA[1].Clone();
-            if(firstTourMembers.Count == 2)
+            if(allMembers.Count == 2)
             {
                 if (someMemberFirst.IsWiner)
                 {
@@ -485,6 +506,7 @@ namespace ArmBazaProject
                         someMemberSecond.IsWiner = false;
                         final.Toure.ToureMembersB.Add((MemberViewModel)someMemberSecond.Clone());
                         final.Toure.ToureMembersB.Add((MemberViewModel)someMemberFirst.Clone());
+                        FinalCommandB.isVisible = true;
                     }
                 }
             }
@@ -492,6 +514,7 @@ namespace ArmBazaProject
             {
                 if (final.Toure.ToureMembersA[0].IsWiner)
                 {
+
                     someMemberSecond.Place = allMembers.Count - placeMembers.Count;
                     placeMembers.Add(someMemberSecond);
                     someMemberFirst.Place = allMembers.Count - placeMembers.Count;
@@ -503,9 +526,12 @@ namespace ArmBazaProject
                     final.Toure.ToureMembersB.Add(someMemberFirst);
                     someMemberSecond.IsWiner = false;
                     final.Toure.ToureMembersB.Add(someMemberSecond);
+                    FinalCommandB.isVisible = true;
                 }
             }
-            
+
+            FinalCommandA.isVisible = false;
+
         }
         private void FinalButtonB(object param)
         {
@@ -545,34 +571,64 @@ namespace ArmBazaProject
                     placeMembers.Add(someMemberSecond);
                 }
             }
-            
+            FinalCommandB.isVisible = false;
         }
         private void SemiFinalButton(object param)
         {
-            someMember = new MemberViewModel();
-            if (semifinal[0].IsWiner)
+            if(allMembers.Count != 2)
             {
-                someMember = (MemberViewModel)semifinal[0].Clone();
-                someMember.IsWiner = false;
-                final.Toure.ToureMembersA.Add(someMember);
-                someMember = (MemberViewModel)semifinal[1].Clone();
-                someMember.Place = allMembers.Count - placeMembers.Count;
-                placeMembers.Add(someMember);
+                someMember = new MemberViewModel();
+                if (semifinal[0].IsWiner)
+                {
+                    someMember = (MemberViewModel)semifinal[0].Clone();
+                    someMember.IsWiner = false;
+                    final.Toure.ToureMembersA.Add(someMember);
+                    someMember = (MemberViewModel)semifinal[1].Clone();
+                    someMember.Place = allMembers.Count - placeMembers.Count;
+                    placeMembers.Add(someMember);
+                }
+                else
+                {
+                    someMember = (MemberViewModel)semifinal[1].Clone();
+                    someMember.IsWiner = false;
+                    final.Toure.ToureMembersA.Add(someMember);
+                    someMember = (MemberViewModel)semifinal[0].Clone();
+                    someMember.Place = allMembers.Count - placeMembers.Count;
+                    placeMembers.Add(someMember);
+                }
             }
             else
             {
-                someMember = (MemberViewModel)semifinal[1].Clone();
-                someMember.IsWiner = false;
-                final.Toure.ToureMembersA.Add(someMember);
-                someMember = (MemberViewModel)semifinal[0].Clone();
-                someMember.Place = allMembers.Count - placeMembers.Count;
-                placeMembers.Add(someMember);
+                someMember = new MemberViewModel();
+                if (semifinal[0].IsWiner)
+                {
+                    someMember = (MemberViewModel)semifinal[0].Clone();
+                    someMember.IsWiner = false;
+                    final.Toure.ToureMembersA.Add(someMember);
+                    someMember = (MemberViewModel)semifinal[1].Clone();
+                    someMember.LoseCounter++;
+                    final.Toure.ToureMembersA.Add(someMember);
+                }
+                else
+                {
+                    someMember = (MemberViewModel)semifinal[1].Clone();
+                    someMember.IsWiner = false;
+                    final.Toure.ToureMembersA.Add(someMember);
+                    someMember = (MemberViewModel)semifinal[0].Clone();
+                    someMember.LoseCounter++;
+                    final.Toure.ToureMembersA.Add(someMember);
+                }
             }
+            
+
+            SemiFinalCommand.isVisible = false;
+            FinalCommandA.isVisible = true;
            
         }
 
         private void ButtonClickToure(ToureViewModel toure)
         {
+            int indexOfVisability = 0;
             bool isToureBDone = true;
             int ind = 0;
             
@@ -651,6 +707,7 @@ namespace ArmBazaProject
                 }
 
             }
+            //5 
             else if (allMembers.Count == 5)
             {
                 
@@ -931,6 +988,29 @@ namespace ArmBazaProject
                 }
 
             }
+
+            if (!SemiFinalCommand.isVisible)
+            {
+                for (int i = 0; i < toures.Count; i++)
+                {
+                    if (toures[i].IsVisible)
+                    {
+                        indexOfVisability = i;
+                    }
+                }
+
+                if (indexOfVisability == toures.Count - 1)
+                {
+                    SemiFinalCommand.isVisible = true;
+                }
+                else
+                {
+                    toures[indexOfVisability + 1].IsVisible = true;
+                }
+
+                toures[indexOfVisability].IsVisible = false;
+            }
+            
 
         }
 

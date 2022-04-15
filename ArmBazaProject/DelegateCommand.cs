@@ -3,13 +3,25 @@ using System.Windows.Input;
 
 namespace ArmBazaProject
 {
-    public class DelegateCommand : IDelegateCommand
+    public class DelegateCommand : ICommand
     {
         Action<object> execute;
         Func<object, bool> canExecute;
 
+        public bool isVisible = true;
+
         // Событие, необходимое для ICommand
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler CanExecuteChanged
+        {
+            add
+            {
+                CommandManager.RequerySuggested += value;
+            }
+            remove
+            {
+                CommandManager.RequerySuggested -= value;
+            }
+        }
 
         // Два конструктора
         public DelegateCommand(Action<object> execute, Func<object, bool> canExecute)
@@ -21,7 +33,7 @@ namespace ArmBazaProject
         public DelegateCommand(Action<object> execute)
         {
             this.execute = execute;
-            this.canExecute = this.AlwaysCanExecute;
+            canExecute = this.AlwaysCanExecute;
         }
 
         // Методы, необходимые для ICommand
@@ -30,22 +42,18 @@ namespace ArmBazaProject
             execute(param);
         }
 
-        public bool CanExecute(object param)
+        public bool CanExecute(object parameter)
         {
-            return canExecute(param);
+            return isVisible;
         }
 
-        // Метод, необходимый для IDelegateCommand
-        public void RaiseCanExecuteChanged()
-        {
-            if (CanExecuteChanged != null)
-                CanExecuteChanged(this, EventArgs.Empty);
-        }
+        
 
         // Метод CanExecute по умолчанию
         private bool AlwaysCanExecute(object param)
         {
             return true;
         }
+
     }
 }

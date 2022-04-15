@@ -6,6 +6,7 @@ using System.Windows.Input;
 using ArmBazaProject.ViewModels;
 using ArmBazaProject.Entities;
 using ArmBazaProject.ExcelEntities;
+using System;
 
 namespace ArmBazaProject
 {
@@ -53,18 +54,18 @@ namespace ArmBazaProject
 
         private void AddMember_Click(object sender, RoutedEventArgs e)
         {
-            MemberWindow memberWindow = new MemberWindow(new Member());
+            /*MemberWindow memberWindow = new MemberWindow(new Member());
             if (memberWindow.ShowDialog() == true)
             {
                 Member member = memberWindow.changedMember;
                 dataBase.Members.Add(member);
                 dataBase.SaveChanges();
-            }
+            }*/
         }
 
         private void EditMember_Click(object sender, RoutedEventArgs e)
         {
-
+            /*
             //  если ни одного объекта не выделено, выходим
             if (competitorList.SelectedItem == null) return;
             // получаем выделенный объект
@@ -100,18 +101,18 @@ namespace ArmBazaProject
                     dataBase.Entry(member).State = EntityState.Modified;
                     dataBase.SaveChanges();
                 }
-            }
+            }*/
 
         }
 
         private void DeleteMember_Click(object sender, RoutedEventArgs e)
-        {
+        {/*
             // если ни одного объекта не выделено, выходим
             if (competitorList.SelectedItem == null) return;
             // получаем выделенный объект
             Member member = competitorList.SelectedItem as Member;
             dataBase.Members.Remove(member);
-            dataBase.SaveChanges();
+            dataBase.SaveChanges();*/
         }
 
         #endregion
@@ -273,10 +274,18 @@ namespace ArmBazaProject
 
         private void getResultsButton_Click(object sender, RoutedEventArgs e)
         {
-            resultVM = new ResultViewModel(competitionVM);
-            resultVM.GetResultsTwoHand();
-            resultTableBoys.DataContext = resultVM.ResultCategoryBoys;
-            resultTableGirls.DataContext = resultVM.ResultCategoryGirls;
+            try
+            {
+                resultVM = new ResultViewModel(competitionVM);
+                resultVM.GetResultsTwoHand();
+                resultTableBoys.DataContext = resultVM.ResultCategoryBoys;
+                resultTableGirls.DataContext = resultVM.ResultCategoryGirls;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message  + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
         }
 
         private void ColumnDefinition_Scroll(object sender, System.Windows.Controls.Primitives.ScrollEventArgs e)
@@ -287,70 +296,100 @@ namespace ArmBazaProject
         //ТУРНИРНЫЕ ТАБЛИЦЫ
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            if (!isCompetitionStarted)
+            try
             {
-                competitionVM.SortAllMembers(dataBaseModel.GetAllCategories("ж", competitionVM.CompetitionLeftHand.CategoryName),
-                dataBaseModel.GetAllCategories("м", competitionVM.CompetitionLeftHand.CategoryName));
+                if (!isCompetitionStarted)
+                {
+                    competitionVM.SortAllMembers(dataBaseModel.GetAllCategories("ж", competitionVM.CompetitionLeftHand.CategoryName),
+                    dataBaseModel.GetAllCategories("м", competitionVM.CompetitionLeftHand.CategoryName));
 
-                //жеребьевка всех категорий
-                competitionVM.RandomDrawForAll();
+                    //жеребьевка всех категорий
+                    competitionVM.RandomDrawForAll();
 
-                //исправить добавление без проблем!
-                /* TabBoysLeftHand.DataContext = null;
-                 TabBoysRighHand.DataContext = null;
-                 TabGirlsLeftHand.DataContext = null;
-                 TabGirlsRighHand.DataContext = null;*/
+                    //исправить добавление без проблем!
+                    /* TabBoysLeftHand.DataContext = null;
+                     TabBoysRighHand.DataContext = null;
+                     TabGirlsLeftHand.DataContext = null;
+                     TabGirlsRighHand.DataContext = null;*/
 
-                //турнирные
-                TabBoysLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesB;
-                TabBoysRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesB;
-                TabGirlsLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesG;
-                TabGirlsRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesG;
+                    //турнирные
+                    TabBoysLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesB;
+                    TabBoysRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesB;
+                    TabGirlsLeftHand.DataContext = competitionVM.CompetitionLeftHand.CategoriesG;
+                    TabGirlsRighHand.DataContext = competitionVM.CompetitionRightHand.CategoriesG;
 
-                //ComandScore.DataContext = competitionVM.
+                    //ComandScore.DataContext = competitionVM.
 
-                MessageBox.Show("Турнирные таблицы успешно созданы. Жеребьевка была проведена для каждой категории автоматически", "Уведомление");
-                isCompetitionStarted = true;
+                    MessageBox.Show("Турнирные таблицы успешно созданы. Жеребьевка была проведена для каждой категории автоматически", "Уведомление");
+                    isCompetitionStarted = true;
+                    saveDrawButton.IsEnabled = true;
+                }
+
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
+
 
 
         }
 
         private void findInDBButton_Click2(object sender, RoutedEventArgs e)
         {
-            DBList.ItemsSource = competitionVM.GetInfoAboutMembersByParam(searchDB.Text);
+            try
+            {
+                int x = 5;
+                int y = x / 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
+            //DBList.ItemsSource = competitionVM.GetInfoAboutMembersByParam(searchDB.Text);
         }
 
         private void resetButton_Click2(object sender, RoutedEventArgs e)
         {
-            searchDB.Text = "";
+            //searchDB.Text = "";
         }
 
         private void saveParametrsCompetition_Click(object sender, RoutedEventArgs e)
         {
-            if(ageCategoryCB.SelectedValue == null || pointsCB.SelectedValue == null)
+            try
             {
-                MessageBox.Show("Вы не указали очки и/или возрастную категорию.", "Уведомление");
+                if (ageCategoryCB.SelectedValue == null || pointsCB.SelectedValue == null)
+                {
+                    MessageBox.Show("Вы не указали очки и/или возрастную категорию.", "Уведомление");
+                }
+                else
+                {
+                    membersGrid.ItemsSource = competitionVM.AllMembers;
+                    GenderComboBox.ItemsSource = competitionVM.genders;
+                    HandComboBox.ItemsSource = competitionVM.hands;
+                    QualificationComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllQualifications();
+                    RegionComboBoxz.ItemsSource = competitionVM.DataBaseModel.GetAllRegions();
+                    TeamComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllTeams();
+                    membersGrid.CellEditEnding += cellEditEnding;
+
+                    competitionVM.SetWeights(dataBaseModel.GetAllCategories("ж", ageCategoryCB.SelectedValue.ToString()),
+                        dataBaseModel.GetAllCategories("м", ageCategoryCB.SelectedValue.ToString()));
+
+                    competitionVM.SetPoints(dataBaseModel.GetAllPoints(pointsCB.SelectedValue.ToString()),
+                        ageCategoryCB.SelectedValue.ToString());
+                    competitionVM.SetWeightsLimits(weightWomen.Text, weightMen.Text);
+                    competitionVM.isCompetitionParametersSet = true;
+                    MessageBox.Show("Параметры сохранены успешно!", "Уведомление");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                membersGrid.ItemsSource = competitionVM.AllMembers;
-                GenderComboBox.ItemsSource = competitionVM.genders;
-                HandComboBox.ItemsSource = competitionVM.hands;
-                QualificationComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllQualifications();
-                RegionComboBoxz.ItemsSource = competitionVM.DataBaseModel.GetAllRegions();
-                TeamComboBox.ItemsSource = competitionVM.DataBaseModel.GetAllTeams();
-                membersGrid.CellEditEnding += cellEditEnding;
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
 
-                competitionVM.SetWeights(dataBaseModel.GetAllCategories("ж", ageCategoryCB.SelectedValue.ToString()),
-                    dataBaseModel.GetAllCategories("м", ageCategoryCB.SelectedValue.ToString()));
-
-                competitionVM.SetPoints(dataBaseModel.GetAllPoints(pointsCB.SelectedValue.ToString()),
-                    ageCategoryCB.SelectedValue.ToString());
-                competitionVM.SetWeightsLimits(weightWomen.Text, weightMen.Text);
-                competitionVM.isCompetitionParametersSet = true;
-                MessageBox.Show("Параметры сохранены успешно!", "Уведомление");
             }
+
         }
 
         
@@ -399,69 +438,133 @@ namespace ArmBazaProject
 
         private void getResultsProtocol_Click(object sender, RoutedEventArgs e)
         {
-            if(resultVM == null)
+            try
             {
-                MessageBox.Show("Пожалуйста вернитесь во вкладку РЕЗУЛЬТАТЫ ДВОЕБОРЬЯ и нажмите кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
-            }
-            else
-            {
-                resultVM.GetProtocolTeamResults();
+                if (resultVM == null)
+                {
+                    MessageBox.Show("Пожалуйста вернитесь во вкладку РЕЗУЛЬТАТЫ ДВОЕБОРЬЯ и нажмите кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
+                }
+                else
+                {
+                    resultVM.GetProtocolTeamResults();
 
-                resultProtocolB.DataContext = resultVM.ResultTeamCategoryBoys;
-                resultProtocolG.DataContext = resultVM.ResultTeamCategoryGirls;
+                    resultProtocolB.DataContext = resultVM.ResultTeamCategoryBoys;
+                    resultProtocolG.DataContext = resultVM.ResultTeamCategoryGirls;
+                }
             }
-           
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
+
+
         }
 
         private void saveAllMembers_Click(object sender, RoutedEventArgs e)
         {
-            serializator.SaveData(competitionVM.AllMembers);
-            MessageBox.Show("Ваши данные успешно сохранены", "Уведомление");
+            try
+            {
+                serializator.SaveData(competitionVM.AllMembers);
+                MessageBox.Show("Ваши данные успешно сохранены", "Уведомление");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
         }
 
         private void loadAllMembers_Click(object sender, RoutedEventArgs e)
         {
-            if(!competitionVM.isCompetitionParametersSet)
+            try
             {
-                MessageBox.Show("Пожалуйста выберите параметры соревнования перед загрузкой данных", "Уведомление");
+                if (!competitionVM.isCompetitionParametersSet)
+                {
+                    MessageBox.Show("Пожалуйста выберите параметры соревнования перед загрузкой данных", "Уведомление");
+                }
+                else
+                {
+                    competitionVM.AllMembers = serializator.OpenData();
+                    membersGrid.ItemsSource = competitionVM.AllMembers;
+                }
             }
-            else
+
+            catch (Exception ex)
             {
-                competitionVM.AllMembers = serializator.OpenData();
-                membersGrid.ItemsSource = competitionVM.AllMembers;
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
             }
-            
+
+
         }
 
         private void getTotalProtocolTeam_Click(object sender, RoutedEventArgs e)
         {
-            resultVM.GetTotalResults();
-            totalProtocolTeam.DataContext = resultVM.ResultSummaryTeams;
-            totalProtocolRegion.DataContext = resultVM.ResultSummaryRegions;
+            try
+            {
+                if (resultVM == null)
+                {
+                    MessageBox.Show("Пожалуйста вернитесь во вкладку СК+Область и нажмите кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
+
+                }
+                else
+                {
+                    resultVM.GetTotalResults();
+                    totalProtocolTeam.DataContext = resultVM.ResultSummaryTeams;
+                    totalProtocolRegion.DataContext = resultVM.ResultSummaryRegions;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
+
+
         }
 
         private void exportResultsButton_Click(object sender, RoutedEventArgs e)
         {
-            if(resultVM == null)
+            try
             {
-                MessageBox.Show("Сначала необходимо посчитать данные. Нажмите на кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
+                if (resultVM == null)
+                {
+                    MessageBox.Show("Сначала необходимо посчитать данные. Нажмите на кнопку ПОСЧИТАТЬ ОЧКИ", "Уведомление");
+                }
+                else
+                {
+                    ExcelHandler excelHandler = new ExcelHandler(competitionVM);
+                    excelHandler.SetApplicationParametersForTwoHandsRelults();
+                    excelHandler.result = resultVM;
+                    excelHandler.SaveAllTwoHandsRelultsData();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ExcelHandler excelHandler = new ExcelHandler(competitionVM);
-                excelHandler.SetApplicationParametersForTwoHandsRelults();
-                excelHandler.result = resultVM;
-                excelHandler.SaveAllTwoHandsRelultsData();
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
             }
-            
+
 
         }
 
         private void Save_Draw_Button_Click(object sender, RoutedEventArgs e)
         {
-            ExcelHandler excelHandler = new ExcelHandler(competitionVM);
-            excelHandler.SetApplicationParametersForDraw();
-            excelHandler.SaveAllDrawData();
+            try
+            {
+                ExcelHandler excelHandler = new ExcelHandler(competitionVM);
+                excelHandler.SetApplicationParametersForDraw();
+                excelHandler.SaveAllDrawData();
+               
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show("Возникла ошибка: " + ex.Message + ex.StackTrace + "Пожалуйста, оповестите об этом разработчика, Спасибо!", "Ошибка");
+
+            }
+
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using ArmBazaProject.Models;
+using System.Windows.Input;
 
 namespace ArmBazaProject.ViewModels
 {
@@ -13,9 +15,10 @@ namespace ArmBazaProject.ViewModels
         private Toure toure;
         public bool ifExtra = false;
         string name;
+        bool isVisisble = false;
         MemberViewModel someMember;
 
-        public IDelegateCommand ToureCommand { protected set; get; }
+        public ICommand ToureCommand { set; get; }
 
         public Toure Toure
         {
@@ -43,17 +46,39 @@ namespace ArmBazaProject.ViewModels
             }
         }
 
+        public bool IsVisible
+        {
+            get { return isVisisble; }
+            set
+            {
+                isVisisble = value;
+                OnPropertyChanged("IsVisible");
+            }
+        }
+
         public ToureViewModel()
         {
 
-            ToureCommand = new DelegateCommand(ExecuteToure);
+            ToureCommand = new DelegateCommand(ExecuteToure, CanExecute);
             toure = new Toure();
+        }
+
+        private bool CanExecute(object arg)
+        {
+            if (isVisisble)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
 
         public void ExecuteToure(object param)
         {
-           ButtonPressedEvent();
+            ButtonPressedEvent();
         }
 
         public void ButtonPressedEvent()
@@ -61,7 +86,6 @@ namespace ArmBazaProject.ViewModels
             if (buttonPressedEvent != null)
                 buttonPressedEvent.Invoke(this);
         }
-
 
         //сортировка 1 тура
         public void SortFirstToure()

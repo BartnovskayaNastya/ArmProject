@@ -25,28 +25,12 @@ namespace ArmBazaProject.ViewModels
         public bool isCompetitionParametersSet = false;
 
 
-
-        private string[] namesB = new string[] { "Саша", "Егор", "Ваня", "Артем",
-            "Илья", "Миша", "Костя", "Игорь", "Захар","Борис", "Витя", "Вова", "Валера",
-        "Кирилл", "Леня", "Глеб", "Гена","Денис", "Лев", "Дима", "Олег"};
-
-        private string[] secondNamesB = new string[] { "Иванов", "Петров", "Давыдов", "Пушкин",
-            "Лермонтов", "Высоцкий", "Блок", "Даль", "Гусев","Горох", "Солодков", "Малиновский", "Бартновский",
-        "Фадеев", "Куприн", "Булгаков", "Толстой","Твен", "Ломоносов", "Орехов", "Лодков"};
-
-        private string[] namesG = new string[] { "Катя", "Настя", "Лида", "Маша",
-            "Даша", "Лена", "Алена", "Аня", "Вика","Ангелина", "Диана", "Надя", "Карина",
-        "Аврора", "Агния", "Мила", "Саша","Люба", "Оля", "Эмира", "Вера"};
-
-        private string[] secondNamesG = new string[] { "Барто", "Брежнева", "Авдеева", "Бабушкина",
-            "Бородина", "Васильева", "Глухова", "Гарбузова", "Давыдова","Егорова", "Жилина", "Зайцева", "Казакова",
-        "Карустина", "Козлова", "Лапина", "Леонова","Макеева", "Акулова", "Павлова", "Рубцова"};
         public string[] genders = new string[] { "м", "ж" };
         public string[] hands = new string[] { "Правая", "Левая", "Обе" };
         public string[] teams = new string[] {};
         public string[] points = new string[] { "STUDENTS", "STANDART" };
         public string[] categories = new string[] { "STANDART", "SENIOR", "YOUTH 21", "JUNIOR 18",
-            "MASTER", "TOURNAMENT1", "TOURNAMENT2", "TOURNAMENT3", "CUP2021" };
+            "MASTER", "TOURNAMENT1", "TOURNAMENT2", "TOURNAMENT3", "CUP2021","YOUTH 21 (Short)"  };
 
         #region Свойства доступа
         public Сompetition CompetitionLeftHand
